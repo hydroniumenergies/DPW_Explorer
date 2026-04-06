@@ -1,0 +1,554 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:transparent}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--color-border-tertiary);margin-bottom:1.5rem;overflow-x:auto}
+.tab{padding:10px 16px;font-size:13px;font-weight:500;color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.tab.active{color:var(--color-text-primary);border-color:var(--color-text-primary)}
+.tab:hover:not(.active){color:var(--color-text-primary)}
+.panel{display:none}.panel.active{display:block}
+.ctrl-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.ctrl-label{font-size:12px;color:var(--color-text-secondary);min-width:160px}
+.ctrl-val{font-size:12px;font-weight:500;min-width:44px;text-align:right;color:var(--color-text-primary)}
+input[type=range]{flex:1;min-width:80px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--color-text-secondary)}
+.leg-item{display:flex;align-items:center;gap:5px}
+.leg-swatch{width:24px;height:3px;border-radius:2px}
+.leg-swatch.dash{background:repeating-linear-gradient(90deg,currentColor 0,currentColor 4px,transparent 4px,transparent 8px)}
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.2rem}
+.metric-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px}
+.metric-card .lbl{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-card .val{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.metric-card .unit{font-size:11px;color:var(--color-text-secondary);margin-left:2px}
+.heatmap-wrap{position:relative}
+.heatmap-canvas{width:100%;height:320px}
+.pareto-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:1rem}
+.pareto-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;cursor:pointer;transition:border-color .15s}
+.pareto-card:hover{border-color:var(--color-border-primary)}
+.pareto-card.selected{border-color:#378ADD;border-width:1.5px}
+.pareto-card .pc-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.pareto-card .pc-sub{font-size:11px;color:var(--color-text-secondary);margin-bottom:8px}
+.pareto-bar-wrap{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.pareto-bar-lbl{font-size:11px;color:var(--color-text-secondary);width:90px;flex-shrink:0}
+.pareto-bar-bg{flex:1;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.pareto-bar-fill{height:100%;border-radius:3px;transition:width .4s}
+.insight-box{margin-top:1rem;padding:10px 14px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+canvas{display:block}
+</style>
+
+<div style="padding:1rem 0">
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">① Sensitivity map</div>
+  <div class="tab" onclick="switchTab(1)">② 3D robustness</div>
+  <div class="tab" onclick="switchTab(2)">③ Risk heatmap</div>
+  <div class="tab" onclick="switchTab(3)">④ Design Pareto</div>
+</div>
+
+<!-- ═══════ TAB 1: Sensitivity map ═══════ -->
+<div class="panel active" id="panel0">
+  <div class="ctrl-row"><span class="ctrl-label">GDL contact angle θ (°)</span><input type="range" id="s_theta" min="90" max="140" value="110" step="1" oninput="drawTab0()"><span class="ctrl-val" id="v_theta">110°</span></div>
+  <div class="ctrl-row"><span class="ctrl-label">MPL pore diameter (nm)</span><input type="range" id="s_pore" min="50" max="800" value="500" step="10" oninput="drawTab0()"><span class="ctrl-val" id="v_pore">500 nm</span></div>
+  <div class="ctrl-row"><span class="ctrl-label">Membrane thickness δ (µm)</span><input type="range" id="s_delta" min="20" max="100" value="50" step="5" oninput="drawTab0()"><span class="ctrl-val" id="v_delta">50 µm</span></div>
+  <div class="ctrl-row"><span class="ctrl-label">Carbonate transference t<sub>CO₃</sub></span><input type="range" id="s_t" min="0.05" max="0.5" value="0.3" step="0.01" oninput="drawTab0()"><span class="ctrl-val" id="v_t">0.30</span></div>
+  <div class="ctrl-row"><span class="ctrl-label">Temperature T (°C)</span><input type="range" id="s_temp" min="20" max="80" value="25" step="5" oninput="drawTab0()"><span class="ctrl-val" id="v_temp">25°C</span></div>
+  <div class="metric-grid">
+    <div class="metric-card"><div class="lbl">Δp_min at 300 mA/cm²</div><div class="val" id="m_dpmin">—<span class="unit">bar</span></div></div>
+    <div class="metric-card"><div class="lbl">P_flood (flooding limit)</div><div class="val" id="m_pflood">—<span class="unit">bar</span></div></div>
+    <div class="metric-card"><div class="lbl">DPW width at 300 mA/cm²</div><div class="val" id="m_dpw">—<span class="unit">bar</span></div></div>
+  </div>
+  <div style="position:relative;width:100%;height:300px"><canvas id="c0"></canvas></div>
+  <div class="legend">
+    <div class="leg-item"><span class="leg-swatch" style="background:#378ADD"></span> Δp_min(j) — carbonate suppression threshold</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#E24B4A"></span> P_flood — flooding limit</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#378ADD;opacity:0.15;height:12px;width:24px;border-radius:2px"></span> Stable DPW (operating envelope)</div>
+  </div>
+</div>
+
+<!-- ═══════ TAB 2: 3D Robustness ═══════ -->
+<div class="panel" id="panel1">
+  <div class="ctrl-row" style="margin-bottom:0.5rem">
+    <span class="ctrl-label">Rotate view</span>
+    <input type="range" id="s_rot" min="0" max="360" value="30" step="1" oninput="drawTab1()">
+    <span class="ctrl-val" id="v_rot">30°</span>
+  </div>
+  <div class="ctrl-row">
+    <span class="ctrl-label">Parameter set</span>
+    <select id="s_param" onchange="drawTab1()" style="font-size:13px;padding:4px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-primary)">
+      <option value="opt">Optimistic (engineered MPL)</option>
+      <option value="mid" selected>Representative</option>
+      <option value="con">Conservative</option>
+    </select>
+    <span class="ctrl-val"></span>
+  </div>
+  <div style="position:relative;width:100%;height:360px"><canvas id="c1"></canvas></div>
+  <div class="legend">
+    <div class="leg-item"><span class="leg-swatch" style="background:#1D9E75"></span> Optimal (high margin)</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#EF9F27"></span> Marginal</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#E24B4A"></span> Failure zone</div>
+  </div>
+  <div class="insight-box">The plateau height (operating margin) represents how far Δp is from both the carbonate crossover boundary and the flooding/crossover limit. A wide, high plateau means robust operation; the narrow peak in the conservative case shows how little room there is before failure.</div>
+</div>
+
+<!-- ═══════ TAB 3: Risk Heatmap ═══════ -->
+<div class="panel" id="panel2">
+  <div class="ctrl-row">
+    <span class="ctrl-label">MPL pore diameter (nm)</span>
+    <input type="range" id="h_pore" min="50" max="800" value="300" step="10" oninput="drawTab2()">
+    <span class="ctrl-val" id="hv_pore">300 nm</span>
+  </div>
+  <div class="ctrl-row">
+    <span class="ctrl-label">Carbonate transference t<sub>CO₃</sub></span>
+    <input type="range" id="h_t" min="0.05" max="0.5" value="0.3" step="0.01" oninput="drawTab2()">
+    <span class="ctrl-val" id="hv_t">0.30</span>
+  </div>
+  <div style="position:relative;width:100%;height:300px" class="heatmap-wrap"><canvas id="c2"></canvas></div>
+  <div class="legend" style="margin-top:8px">
+    <div class="leg-item"><span class="leg-swatch" style="background:#E24B4A"></span> Carbonate crossover (too little Δp)</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#1D9E75"></span> Stable operation</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#3B8BD4"></span> Flooding / membrane rupture (too much Δp)</div>
+  </div>
+  <div class="insight-box">Unlike the binary safe/unsafe line of the DPW, this map shows risk as a gradient. The sharp colour transition reveals that the flooding boundary is steep (sudden failure), while the carbonate boundary is more gradual (progressive performance loss). Moving sliders reshapes the entire probability landscape.</div>
+</div>
+
+<!-- ═══════ TAB 4: Pareto ═══════ -->
+<div class="panel" id="panel3">
+  <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem">Select a material/architecture combination to see its DPW window and position on the cost-performance trade-off:</p>
+  <div class="pareto-grid" id="pareto-grid"></div>
+  <div style="position:relative;width:100%;height:260px;margin-top:1rem"><canvas id="c3"></canvas></div>
+  <div class="insight-box" id="pareto-insight">Click a card above to see detailed analysis.</div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── Physics helpers ──────────────────────────────────────────────
+const km = 5e-18, mu = 1e-3, dc = 2e-10, dcc = 50, cc = 30, F = 96485;
+function dpMin(j_mAcm2, t, delta_um) {
+  const j = j_mAcm2 * 10; // A/m²
+  const d = delta_um * 1e-6;
+  return (mu * d / km) * (dc * dcc / d + t * j / (2 * F)) / cc / 1e5; // bar
+}
+function pflood(theta_deg, pore_nm) {
+  const g = 0.072, t = theta_deg * Math.PI / 180, d = pore_nm * 1e-9;
+  return (4 * g * Math.cos(t) / d) * 0.5 / 1e5; // bar (absolute value, cos(>90) is negative so cap)
+}
+function pfloodSigned(theta_deg, pore_nm) {
+  const g = 0.072, t = theta_deg * Math.PI / 180, d = pore_nm * 1e-9;
+  return Math.abs(4 * g * Math.abs(Math.cos(t)) / d) / 1e5;
+}
+
+// ── Tab state ────────────────────────────────────────────────────
+let charts = {};
+function switchTab(i) {
+  document.querySelectorAll('.tab').forEach((t,idx) => t.classList.toggle('active', idx===i));
+  document.querySelectorAll('.panel').forEach((p,idx) => p.classList.toggle('active', idx===i));
+  const fns = [drawTab0, drawTab1, drawTab2, drawTab3];
+  setTimeout(fns[i], 60);
+}
+
+// ── Tab 0: Sensitivity map ────────────────────────────────────────
+function drawTab0() {
+  const theta = +document.getElementById('s_theta').value;
+  const pore  = +document.getElementById('s_pore').value;
+  const delta = +document.getElementById('s_delta').value;
+  const t_    = +document.getElementById('s_t').value;
+  const temp  = +document.getElementById('s_temp').value;
+  document.getElementById('v_theta').textContent = theta + '°';
+  document.getElementById('v_pore').textContent  = pore + ' nm';
+  document.getElementById('v_delta').textContent = delta + ' µm';
+  document.getElementById('v_t').textContent     = t_.toFixed(2);
+  document.getElementById('v_temp').textContent  = temp + '°C';
+
+  const jVals = [50,100,150,200,250,300,350,400,450,500];
+  const dpMinVals = jVals.map(j => dpMin(j, t_, delta));
+  const pfl = pfloodSigned(theta, pore);
+  const dp300 = dpMin(300, t_, delta);
+  const dpw = Math.max(0, pfl - dp300);
+
+  document.getElementById('m_dpmin').innerHTML = dp300.toFixed(2) + '<span class="unit"> bar</span>';
+  document.getElementById('m_pflood').innerHTML = pfl.toFixed(2) + '<span class="unit"> bar</span>';
+  document.getElementById('m_dpw').innerHTML = dpw.toFixed(2) + '<span class="unit"> bar</span>';
+
+  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridC  = isDark ? '#333' : '#eee';
+  const textC  = isDark ? '#bbb' : '#555';
+
+  if (charts.c0) charts.c0.destroy();
+  const ctx = document.getElementById('c0').getContext('2d');
+  charts.c0 = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: jVals,
+      datasets: [
+        {
+          label: 'Δp_min (bar)',
+          data: dpMinVals,
+          borderColor: '#378ADD',
+          backgroundColor: 'rgba(55,138,221,0.12)',
+          fill: '+1',
+          tension: 0.4, pointRadius: 3
+        },
+        {
+          label: 'P_flood (bar)',
+          data: jVals.map(() => pfl),
+          borderColor: '#E24B4A',
+          borderDash: [6,3],
+          fill: false,
+          pointRadius: 0, tension: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + ' bar' }
+      }},
+      scales: {
+        x: { title: { display: true, text: 'Current density j (mA cm⁻²)', color: textC, font:{size:11} }, grid:{color:gridC}, ticks:{color:textC} },
+        y: { title: { display: true, text: 'Δp (bar)', color: textC, font:{size:11} }, min: 0, grid:{color:gridC}, ticks:{color:textC} }
+      }
+    }
+  });
+}
+
+// ── Tab 1: 3D robustness (isometric projection) ──────────────────
+function drawTab1() {
+  const rotDeg = +document.getElementById('s_rot').value;
+  document.getElementById('v_rot').textContent = rotDeg + '°';
+  const param = document.getElementById('s_param').value;
+  const params = {
+    opt: { t: 0.15, delta: 50, pore: 100, theta: 130 },
+    mid: { t: 0.3,  delta: 50, pore: 300, theta: 110 },
+    con: { t: 0.4,  delta: 80, pore: 500, theta: 100 }
+  }[param];
+
+  const canvas = document.getElementById('c1');
+  const W = canvas.parentElement.clientWidth, H = 360;
+  canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  ctx.clearRect(0,0,W,H);
+
+  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const NJ = 20, NP = 20;
+  const jMin = 50, jMax = 500;
+  const pMin = 0, pMax = 8;
+  const pfl = pfloodSigned(params.theta, params.pore);
+
+  function margin(j, dp) {
+    const dpm = dpMin(j, params.t, params.delta);
+    const distLow  = dp - dpm;
+    const distHigh = pfl - dp;
+    if (distLow < 0 || distHigh < 0) return -1;
+    return Math.min(distLow, distHigh);
+  }
+
+  const rot = rotDeg * Math.PI / 180;
+  const cx = W / 2, cy = H * 0.55;
+  const sx = 160, sy = 80, sz = 120;
+
+  function project(xi, yi, zi) {
+    const x3 = xi * Math.cos(rot) + yi * Math.sin(rot);
+    const y3 = -xi * Math.sin(rot) + yi * Math.cos(rot);
+    return [cx + x3 * sx, cy - y3 * sy - zi * sz];
+  }
+
+  function marginColor(m) {
+    if (m < 0) return isDark ? '#501313' : '#FCEBEB';
+    if (m < 0.5) return isDark ? '#412402' : '#FAEEDA';
+    if (m < 1.2) return isDark ? '#27500A' : '#EAF3DE';
+    return isDark ? '#085041' : '#E1F5EE';
+  }
+  function marginColorFace(m) {
+    if (m < 0) return '#E24B4A';
+    if (m < 0.5) return '#EF9F27';
+    if (m < 1.2) return '#639922';
+    return '#1D9E75';
+  }
+
+  // Draw grid cells from back to front
+  const cells = [];
+  for (let i = 0; i < NJ; i++) {
+    for (let k = 0; k < NP; k++) {
+      const j0 = jMin + i/NJ * (jMax-jMin);
+      const j1 = jMin + (i+1)/NJ * (jMax-jMin);
+      const p0 = pMin + k/NP * (pMax-pMin);
+      const p1 = pMin + (k+1)/NP * (pMax-pMin);
+      const jc = (j0+j1)/2, pc = (p0+p1)/2;
+      const m = margin(jc, pc);
+      const h = Math.max(0, m);
+      const xi0 = i/NJ - 0.5, xi1 = (i+1)/NJ - 0.5;
+      const yi0 = k/NP - 0.5, yi1 = (k+1)/NP - 0.5;
+      const [px0,py0] = project(xi0,yi0,0);
+      cells.push({ i, k, xi0, xi1, yi0, yi1, h, m, px0, py0 });
+    }
+  }
+  // Sort back to front
+  cells.sort((a,b) => (a.xi0+a.yi0) - (b.xi0+b.yi0));
+  for (const c of cells) {
+    const {xi0,xi1,yi0,yi1,h,m} = c;
+    const pts = [
+      project(xi0,yi0,0), project(xi1,yi0,0),
+      project(xi1,yi1,0), project(xi0,yi1,0)
+    ];
+    // Bottom face
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+    for (let p=1;p<4;p++) ctx.lineTo(pts[p][0],pts[p][1]);
+    ctx.closePath();
+    ctx.fillStyle = isDark ? '#1a1a18' : '#f5f5f2';
+    ctx.fill();
+
+    if (h > 0.05) {
+      const top = [
+        project(xi0,yi0,h), project(xi1,yi0,h),
+        project(xi1,yi1,h), project(xi0,yi1,h)
+      ];
+      // Top face
+      ctx.beginPath(); ctx.moveTo(top[0][0],top[0][1]);
+      for (let p=1;p<4;p++) ctx.lineTo(top[p][0],top[p][1]);
+      ctx.closePath();
+      ctx.fillStyle = marginColorFace(m);
+      ctx.globalAlpha = 0.82;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.4)';
+      ctx.lineWidth = 0.4; ctx.stroke();
+
+      // Front faces visible
+      // Left wall (xi0 face if front)
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0],pts[0][1]); ctx.lineTo(top[0][0],top[0][1]);
+      ctx.lineTo(top[3][0],top[3][1]); ctx.lineTo(pts[3][0],pts[3][1]);
+      ctx.closePath();
+      ctx.fillStyle = marginColorFace(m);
+      ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
+    }
+  }
+
+  // Axes
+  ctx.strokeStyle = isDark ? '#888' : '#aaa';
+  ctx.lineWidth = 1;
+  const [ox,oy] = project(-0.5,-0.5,0);
+  const [ax,ay] = project(0.5,-0.5,0);
+  const [bx,by] = project(-0.5,0.5,0);
+  const [vx,vy] = project(-0.5,-0.5,1.5);
+  ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ax,ay); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(bx,by); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(vx,vy); ctx.stroke();
+
+  ctx.fillStyle = isDark ? '#ccc' : '#444';
+  ctx.font = '11px system-ui, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Current density j →', (ox+ax)/2, (oy+ay)/2 + 18);
+  ctx.fillText('Δp →', (ox+bx)/2 - 12, (oy+by)/2 + 6);
+  ctx.fillText('Margin', vx, vy - 8);
+}
+
+// ── Tab 2: Risk heatmap ──────────────────────────────────────────
+function drawTab2() {
+  const pore = +document.getElementById('h_pore').value;
+  const t_   = +document.getElementById('h_t').value;
+  document.getElementById('hv_pore').textContent = pore + ' nm';
+  document.getElementById('hv_t').textContent = t_.toFixed(2);
+
+  const canvas = document.getElementById('c2');
+  const W = canvas.parentElement.clientWidth, H = 300;
+  canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  ctx.clearRect(0,0,W,H);
+
+  const padL = 52, padR = 20, padT = 20, padB = 36;
+  const pw = W - padL - padR, ph = H - padT - padB;
+  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+  const jMin = 50, jMax = 500, dpMin2 = 0, dpMax2 = 10;
+  const NX = 120, NY = 80;
+  const pfl = pfloodSigned(110, pore);
+
+  function risk(j, dp) {
+    const dpm = dpMin(j, t_, 50);
+    if (dp < dpm) {
+      const ratio = Math.min(1, (dpm - dp) / Math.max(0.01, dpm));
+      return { type:'carb', r: ratio };
+    }
+    if (dp > pfl) {
+      const ratio = Math.min(1, (dp - pfl) / 2);
+      return { type:'flood', r: ratio };
+    }
+    const margin = Math.min(dp - dpm, pfl - dp);
+    const maxM = (pfl - dpm) / 2;
+    const qual = maxM > 0 ? Math.min(1, margin / maxM) : 0;
+    return { type:'stable', q: qual };
+  }
+
+  const imgData = ctx.createImageData(Math.floor(pw), Math.floor(ph));
+  for (let xi = 0; xi < pw; xi++) {
+    const j = jMin + xi / pw * (jMax - jMin);
+    for (let yi = 0; yi < ph; yi++) {
+      const dp = dpMax2 - (yi / ph * (dpMax2 - dpMin2));
+      const rk = risk(j, dp);
+      let r,g,b;
+      if (rk.type === 'carb') {
+        const v = rk.r;
+        r = isDark ? Math.round(80 + v*90) : Math.round(252 - v*80);
+        g = isDark ? Math.round(20 + v*10) : Math.round(235 - v*130);
+        b = isDark ? Math.round(20 + v*10) : Math.round(235 - v*130);
+      } else if (rk.type === 'flood') {
+        const v = rk.r;
+        r = isDark ? Math.round(4 + v*20) : Math.round(230 - v*50);
+        g = isDark ? Math.round(52 + v*40) : Math.round(242 - v*60);
+        b = isDark ? Math.round(83 + v*60) : Math.round(251 - v*60);
+      } else {
+        const v = rk.q;
+        r = isDark ? Math.round(4 + v*25) : Math.round(234 - v*40);
+        g = isDark ? Math.round(52 + v*106) : Math.round(243 - v*60);
+        b = isDark ? Math.round(41 + v*65) : Math.round(232 - v*60);
+      }
+      const idx = (yi * Math.floor(pw) + xi) * 4;
+      imgData.data[idx] = r; imgData.data[idx+1] = g; imgData.data[idx+2] = b; imgData.data[idx+3] = 255;
+    }
+  }
+  ctx.putImageData(imgData, padL, padT);
+
+  // Axes
+  ctx.fillStyle = isDark ? '#bbb' : '#444';
+  ctx.font = '11px system-ui, sans-serif';
+  ctx.strokeStyle = isDark ? '#555' : '#ccc';
+  ctx.lineWidth = 0.5;
+  ctx.strokeRect(padL, padT, pw, ph);
+
+  for (let j = 100; j <= 500; j += 100) {
+    const x = padL + (j - jMin) / (jMax - jMin) * pw;
+    ctx.textAlign = 'center';
+    ctx.fillText(j, x, H - 6);
+    ctx.beginPath(); ctx.moveTo(x, padT + ph); ctx.lineTo(x, padT + ph + 4); ctx.stroke();
+  }
+  for (let dp = 0; dp <= 10; dp += 2) {
+    const y = padT + ph - (dp - dpMin2) / (dpMax2 - dpMin2) * ph;
+    ctx.textAlign = 'right'; ctx.fillText(dp, padL - 6, y + 4);
+  }
+  ctx.textAlign = 'center';
+  ctx.fillText('Current density j (mA cm⁻²)', padL + pw/2, H - 2);
+  ctx.save(); ctx.translate(11, padT + ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Δp (bar)', 0, 0); ctx.restore();
+}
+
+// ── Tab 3: Pareto ────────────────────────────────────────────────
+const paretos = [
+  { id:'A', title:'Unmodified commercial GDL',       sub:'Standard PTFE, 500 nm pore', theta:100, pore:500, t:0.35, cost:1.0, color:'#888780' },
+  { id:'B', title:'PTFE-gradient MPL',               sub:'Graded hydrophobicity', theta:115, pore:200, t:0.30, cost:2.1, color:'#378ADD' },
+  { id:'C', title:'Fluorosilane-functionalised MPL', sub:'ALD fluoropolymer coating', theta:130, pore:100, t:0.25, cost:3.4, color:'#1D9E75' },
+  { id:'D', title:'Nanostructured ePTFE composite',  sub:'50 nm pore + reinforced AEM', theta:138, pore:50,  t:0.15, cost:5.8, color:'#EF9F27' },
+];
+let selPareto = 'B';
+
+function buildParetoCards() {
+  const grid = document.getElementById('pareto-grid');
+  grid.innerHTML = '';
+  paretos.forEach(p => {
+    const pfl = pfloodSigned(p.theta, p.pore);
+    const dpm = dpMin(300, p.t, 50);
+    const dpw = Math.max(0, pfl - dpm);
+    const div = document.createElement('div');
+    div.className = 'pareto-card' + (p.id === selPareto ? ' selected' : '');
+    div.onclick = () => { selPareto = p.id; buildParetoCards(); drawTab3(); };
+    div.innerHTML = `
+      <div class="pc-title" style="color:${p.color}">${p.id}: ${p.title}</div>
+      <div class="pc-sub">${p.sub}</div>
+      <div class="pareto-bar-wrap"><span class="pareto-bar-lbl">DPW width</span><div class="pareto-bar-bg"><div class="pareto-bar-fill" style="width:${Math.min(100,dpw/8*100).toFixed(0)}%;background:${p.color}"></div></div><span style="font-size:11px;color:var(--color-text-secondary)">${dpw.toFixed(1)} bar</span></div>
+      <div class="pareto-bar-wrap"><span class="pareto-bar-lbl">Rel. cost</span><div class="pareto-bar-bg"><div class="pareto-bar-fill" style="width:${(p.cost/6*100).toFixed(0)}%;background:${p.color};opacity:0.5"></div></div><span style="font-size:11px;color:var(--color-text-secondary)">${p.cost.toFixed(1)}×</span></div>
+    `;
+    grid.appendChild(div);
+  });
+  const sel = paretos.find(p => p.id === selPareto);
+  const pfl = pfloodSigned(sel.theta, sel.pore);
+  const dpm = dpMin(300, sel.t, 50);
+  document.getElementById('pareto-insight').innerHTML =
+    `<strong style="color:var(--color-text-primary)">${sel.id}: ${sel.title}</strong><br>
+     Δp_min at 300 mA/cm² = ${dpm.toFixed(2)} bar &nbsp;|&nbsp; P_flood = ${pfl.toFixed(2)} bar &nbsp;|&nbsp; DPW width = ${Math.max(0,pfl-dpm).toFixed(2)} bar<br>
+     Relative cost index: ${sel.cost.toFixed(1)}× base cost. ${sel.id==='D' ? 'This is the Pareto frontier: maximum performance at highest investment.' : sel.id==='C' ? 'Strong performance gain at moderate cost — best balance for near-term deployment.' : sel.id==='B' ? 'Moderate DPW expansion at low incremental cost — the pragmatic first step.' : 'Baseline: minimal investment, but severely limited DPW width restricts safe operating range.'}`;
+}
+
+function drawTab3() {
+  buildParetoCards();
+  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  if (charts.c3) charts.c3.destroy();
+  const ctx = document.getElementById('c3').getContext('2d');
+  charts.c3 = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: paretos.map(p => {
+        const pfl = pfloodSigned(p.theta, p.pore);
+        const dpm = dpMin(300, p.t, 50);
+        const dpw = Math.max(0, pfl - dpm);
+        return {
+          label: p.id,
+          data: [{ x: p.cost, y: dpw }],
+          backgroundColor: p.id === selPareto ? p.color : p.color + '88',
+          borderColor: p.color,
+          pointRadius: p.id === selPareto ? 12 : 8,
+          pointHoverRadius: 14,
+          borderWidth: p.id === selPareto ? 2 : 1,
+        };
+      })
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: {
+          label: ctx => {
+            const p = paretos.find(pp => pp.id === ctx.dataset.label);
+            return `${p.title}: cost ${ctx.parsed.x.toFixed(1)}×, DPW ${ctx.parsed.y.toFixed(1)} bar`;
+          }
+        }}
+      },
+      scales: {
+        x: { title: { display: true, text: 'Relative manufacturing cost (×)', color: isDark?'#bbb':'#555', font:{size:11} }, min:0, max:7, grid:{color:isDark?'#333':'#eee'}, ticks:{color:isDark?'#bbb':'#555'} },
+        y: { title: { display: true, text: 'DPW window width at 300 mA/cm² (bar)', color: isDark?'#bbb':'#555', font:{size:11} }, min:0, max:9, grid:{color:isDark?'#333':'#eee'}, ticks:{color:isDark?'#bbb':'#555'} }
+      },
+      onClick(e, els) {
+        if (els.length) { selPareto = paretos[els[0].datasetIndex].id; buildParetoCards(); drawTab3(); }
+      }
+    }
+  });
+  // Pareto front line
+  const chart = charts.c3;
+  setTimeout(() => {
+    const ds = paretos.map(p => {
+      const pfl = pfloodSigned(p.theta, p.pore);
+      const dpm = dpMin(300, p.t, 50);
+      return { x: p.cost, y: Math.max(0, pfl - dpm) };
+    }).sort((a,b) => a.x - b.x);
+    const meta = chart.getDatasetMeta(0);
+    if (!meta) return;
+    const xScale = chart.scales.x, yScale = chart.scales.y;
+    const c = chart.ctx;
+    c.save();
+    c.setLineDash([4,4]);
+    c.strokeStyle = isDark ? '#555' : '#ccc';
+    c.lineWidth = 1;
+    c.beginPath();
+    ds.forEach((pt,i) => {
+      const px = xScale.getPixelForValue(pt.x);
+      const py = yScale.getPixelForValue(pt.y);
+      if (i===0) c.moveTo(px,py); else c.lineTo(px,py);
+    });
+    c.stroke();
+    c.restore();
+  }, 100);
+}
+
+// ── Init ─────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  drawTab0();
+  buildParetoCards();
+});
+window.addEventListener('resize', () => {
+  const active = document.querySelector('.panel.active');
+  const idx = [...document.querySelectorAll('.panel')].indexOf(active);
+  [drawTab0,drawTab1,drawTab2,drawTab3][idx]();
+});
+</script>
