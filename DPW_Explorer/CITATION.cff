@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the tool and the accompanying paper."
+
+title: "Differential Pressure Window Explorer — Interactive Supplementary Figure"
+type: software
+version: "1.0.0"
+date-released: "2026-01-01"
+license: MIT
+repository-code: "https://github.com/YOUR-USERNAME/dpw-explorer"
+url: "https://YOUR-USERNAME.github.io/dpw-explorer/"
+
+abstract: >
+  Interactive browser-based tool for exploring the Differential Pressure Window
+  (DPW) in CO₂ electrolyser design. Implements the Nernst–Planck–Darcy transport
+  framework from the accompanying perspectives article, providing four interactive
+  representations: sensitivity map, 3D robustness surface, risk heatmap, and
+  design Pareto front. Supplementary Figure S1 for Rahman et al. (2026).
+
+authors:
+  - family-names: Rahman
+    given-names: A.
+    affiliation: "Department of Chemical Engineering, Imperial College London"
+  - family-names: Singh
+    given-names: B.
+    affiliation: "The Faraday Institution / Imperial College London"
+  - family-names: Zhou
+    given-names: C.
+    affiliation: "Department of Materials Science, MIT"
+
+preferred-citation:
+  type: article
+  title: >
+    Differential Pressure Engineering as a Primary Strategy to Mitigate
+    Carbonate Formation in CO₂ Electrolysers
+  authors:
+    - family-names: Rahman
+      given-names: A.
+    - family-names: Singh
+      given-names: B.
+    - family-names: Zhou
+      given-names: C.
+  journal: "Perspectives in Energy & Electrochemistry"
+  year: 2026
+  doi: "10.1039/XXXX"
