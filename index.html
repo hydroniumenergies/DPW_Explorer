@@ -142,7 +142,7 @@ footer a:hover{text-decoration:underline}
 </div>
 
 <div class="note-bar" id="notebar">
-  <strong>Model note:</strong> Δp_min is the pressure at which interfacial [CO₃²⁻] reaches the suppression target (slider above). At the default 200 nm pore, DPW is non-zero from low j. Increasing pore size narrows the window; decreasing it widens it substantially. The suppression target slider lets you explore different engineering acceptance criteria.
+  <strong>Model note:</strong> Δp<sub>min</sub> is the pressure at which interfacial [CO₃²⁻] reaches the suppression target (slider above). At the default 200 nm pore, DPW is non-zero from low j. Increasing pore size narrows the window; decreasing it widens it substantially. The suppression target slider lets you explore different engineering acceptance criteria.
 </div>
 
 <div class="mg" id="lm"></div>
@@ -160,17 +160,17 @@ footer a:hover{text-decoration:underline}
 <div class="pnl on" id="p0">
   <div class="eq">
     [CO₃²⁻]_interface(j,Δp) = [CO₃²⁻]_bulk · 1/(1 + 2.5·[CO₂(aq)]/[OH⁻]_local) &nbsp;<span class="en">[Eq. A1]</span><br>
-    Δp_min: solve [CO₃²⁻]_interface = target × [CO₃²⁻]_interface(Δp=0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A2]</span><br>
+    Δp<sub>min</sub>: solve [CO₃²⁻]_interface = target × [CO₃²⁻]_interface(Δp=0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A2]</span><br>
     P_flood = 4γ|cosθ| / d_pore &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A3]</span>
   </div>
   <div class="cw" style="height:285px"><canvas id="c0"></canvas></div>
   <div class="lr">
-    <div class="le"><span class="sw" style="background:var(--bl)"></span>Δp_min(j) — suppression threshold</div>
+    <div class="le"><span class="sw" style="background:var(--bl)"></span>Δp<sub>min</sub>(j) — suppression threshold</div>
     <div class="le"><span class="sw" style="border-top:1.5px dashed var(--rd);background:transparent;height:0"></span>P_flood limit</div>
     <div class="le"><span class="sw" style="background:var(--bl);opacity:.1;height:9px;border-radius:2px"></span>Stable DPW</div>
     <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Operating point (j, Δp sliders)</div>
   </div>
-  <div class="info"><strong>Why this now works:</strong> Carbonate crossover flux can never be driven to zero by pressure alone — it is dominated by electromigration. Instead, Δp_min is correctly defined as the pressure that suppresses interfacial [CO₃²⁻] to a chosen fraction of its ambient value (the suppression target slider), preventing GDL pore precipitation. The pore diameter slider controls P_flood (ceiling). Smaller pores = higher ceiling = wider window.</div>
+  <div class="info"><strong>Why this now works:</strong> Carbonate crossover flux can never be driven to zero by pressure alone — it is dominated by electromigration. Instead, Δp<sub>min</sub> is correctly defined as the pressure that suppresses interfacial [CO₃²⁻] to a chosen fraction of its ambient value (the suppression target slider), preventing GDL pore precipitation. The pore diameter slider controls P_flood (ceiling). Smaller pores = higher ceiling = wider window.</div>
 </div>
 
 <!-- ═══ PANEL 1 ═══ -->
@@ -204,7 +204,7 @@ footer a:hover{text-decoration:underline}
     <div class="le"><span class="sw" style="background:var(--bl)"></span>GDL flooding / membrane rupture (Δp too high)</div>
     <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Current (j, Δp) operating point</div>
   </div>
-  <div class="info">The risk map shows the correct physics: the carbonate risk zone (red) expands rightward as j increases, because Δp_min rises with j (more OH⁻ produced → more CO₂ needed to suppress it). The flooding zone (blue) is fixed by GDL architecture. Changing pore size or contact angle shifts the blue boundary; changing j or suppression target shifts the red boundary.</div>
+  <div class="info">The risk map shows the correct physics: the carbonate risk zone (red) expands rightward as j increases, because Δp<sub>min</sub> rises with j (more OH⁻ produced → more CO₂ needed to suppress it). The flooding zone (blue) is fixed by GDL architecture. Changing pore size or contact angle shifts the blue boundary; changing j or suppression target shifts the red boundary.</div>
 </div>
 
 <!-- ═══ PANEL 3 ═══ -->
@@ -310,7 +310,7 @@ function xCarb(j_mA, dp_bar) {
 }
 
 /**
- * Δp_min: pressure where X_carb falls to (suppTarget/100).
+ * Δp<sub>min</sub>: pressure where X_carb falls to (suppTarget/100).
  * suppTarget is a percentage kept (e.g. 50 = keep 50% = suppress 50%).
  */
 function dpMin(j_mA, suppFrac) {
@@ -445,13 +445,13 @@ function ua() {
   // Update note bar based on DPW
   const nb = document.getElementById('notebar');
   if (dpw <= 0) {
-    nb.innerHTML = `<strong>DPW is zero</strong> at current settings: P_flood (${pfl.toFixed(2)} bar) ≤ Δp_min (${dpm.toFixed(2)} bar). Try: decrease pore diameter, increase contact angle, or reduce the suppression target slider (less strict criterion).`;
+    nb.innerHTML = `<strong>DPW is zero</strong> at current settings: P_flood (${pfl.toFixed(2)} bar) ≤ Δp<sub>min</sub> (${dpm.toFixed(2)} bar). Try: decrease pore diameter, increase contact angle, or reduce the suppression target slider (less strict criterion).`;
   } else {
     nb.innerHTML = `<strong>DPW = ${dpw.toFixed(2)} bar</strong> at j=${g.j} mA cm⁻². Operating point (Δp=${g.dp.toFixed(1)} bar) is ${ok?'inside ✓ the DPW':'outside ✗ the DPW'}. Suppression criterion: reduce [CO₃²⁻] to ≤${(g.st*100).toFixed(0)}% of ambient value.`;
   }
 
   document.getElementById('lm').innerHTML = `
-    <div class="mc"><div class="ml">Δp_min @${g.j}mA</div><div class="mv">${dpm.toFixed(2)}<span class="mu">bar</span></div></div>
+    <div class="mc"><div class="ml">Δp<sub>min</sub> @${g.j}mA</div><div class="mv">${dpm.toFixed(2)}<span class="mu">bar</span></div></div>
     <div class="mc"><div class="ml">P_flood</div><div class="mv">${pfl.toFixed(2)}<span class="mu">bar</span></div></div>
     <div class="mc"><div class="ml">DPW width</div><div class="mv" style="color:${dpw>0?'var(--gn)':'var(--rd)'}">${dpw.toFixed(2)}<span class="mu">bar</span></div></div>
     <div class="mc"><div class="ml">Status @Δp=${g.dp.toFixed(1)}</div><div class="mv" style="color:${sc};font-size:12px">${ss}</div></div>
@@ -474,7 +474,7 @@ function dP0() {
   if (CH.c0) CH.c0.destroy();
   CH.c0 = new Chart(document.getElementById('c0'), { type:'line',
     data: { labels: js, datasets: [
-      { label:'Δp_min', data:dpm, borderColor:'#1a5fa8', backgroundColor:'rgba(26,95,168,.08)', fill:'+1', tension:.35, pointRadius:0, borderWidth:2 },
+      { label:'Δp<sub>min</sub>', data:dpm, borderColor:'#1a5fa8', backgroundColor:'rgba(26,95,168,.08)', fill:'+1', tension:.35, pointRadius:0, borderWidth:2 },
       { label:'P_flood', data:js.map(()=>pfl), borderColor:'#b83232', borderDash:[6,3], fill:false, pointRadius:0, borderWidth:1.5 },
       { label:'Op', type:'scatter', data:[{x:g.j, y:g.dp}], backgroundColor:'#a05c12', pointRadius:9, showLine:false },
     ]},
@@ -690,7 +690,7 @@ function dP5() {
   const sp=PSET.find(p=>p.id===selP);
   const pfl2=pflood(sp.th,sp.po), dpm2=dpMin(g.j,g.st);
   document.getElementById('pins').innerHTML=`<strong>${sp.id}: ${sp.title}</strong> — j=${g.j} mA cm⁻², suppression target=${(g.st*100).toFixed(0)}%<br>
-    Δp_min=${dpm2.toFixed(2)} bar · P_flood=${pfl2.toFixed(2)} bar · DPW=${Math.max(0,pfl2-dpm2).toFixed(2)} bar · Cost ${sp.cost.toFixed(1)}×<br><br>${sp.note}`;
+    Δp<sub>min</sub>=${dpm2.toFixed(2)} bar · P_flood=${pfl2.toFixed(2)} bar · DPW=${Math.max(0,pfl2-dpm2).toFixed(2)} bar · Cost ${sp.cost.toFixed(1)}×<br><br>${sp.note}`;
   if(CH.c5)CH.c5.destroy();
   CH.c5=new Chart(document.getElementById('c5'),{type:'scatter',
     data:{datasets:PSET.map(p=>{const pf=pflood(p.th,p.po),dm=dpMin(g.j,g.st),dw=Math.max(0,pf-dm);
