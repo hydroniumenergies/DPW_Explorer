@@ -210,10 +210,10 @@ footer a:hover{text-decoration:underline}
 <!-- ═══ PANEL 3 ═══ -->
 <div class="pnl" id="p3">
   <div class="eq">
-    X_carb(j,Δp) = [CO₃²⁻](j,Δp) / [CO₃²⁻](j,0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B1]</span><br>
-    FE(j,Δp) = FE₀(j)·[1 − α·X_carb] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B2]</span><br>
-    V_cell = E_eq + b·log(j/j₀) + η_OER + η_mt(j,Δp) + j·R_mem(X_carb) &nbsp;&nbsp;<span class="en">[Eq. B3]</span><br>
-    EE = FE·(ΔG°/n_eF) / V_cell &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B4]</span>
+    X<sub>carb</sub>(j,Δp) = [CO₃²⁻](j,Δp) / [CO₃²⁻](j,0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B1]</span><br>
+    FE(j,Δp) = FE₀(j)·[1 − α·X<sub>carb</sub>] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B2]</span><br>
+    V<sub>cell</sub> = E_eq + b·log(j/j₀) + η<sub>OER</sub> + η<sub>mt</sub>(j,Δp) + j·R_mem(X<sub>carb</sub>) &nbsp;&nbsp;<span class="en">[Eq. B3]</span><br>
+    EE = FE·(ΔG°/n_eF) / V<sub>cell</sub> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B4]</span>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.7rem">
     <div class="gc" style="flex:1;min-width:160px"><label>Output</label>
@@ -222,7 +222,7 @@ footer a:hover{text-decoration:underline}
         <option value="EE">Energy efficiency (%)</option>
         <option value="util">Single-pass CO₂ utilisation (%)</option>
         <option value="Vcell">Cell voltage (V)</option>
-        <option value="Xcarb">Carbonate fraction X_carb (0–1)</option>
+        <option value="Xcarb">Carbonate fraction X<sub>carb</sub> (0–1)</option>
         <option value="eta_mt">Mass transport overpotential (mV)</option>
       </select>
     </div>
@@ -300,8 +300,8 @@ function co3Interface(j_mA, dp_bar) {
 }
 
 /**
- * Carbonate suppression fraction X_carb (Eq. B1).
- * X_carb = 1 at Δp=0 (no suppression), → 0 as Δp → ∞.
+ * Carbonate suppression fraction X<sub>carb</sub> (Eq. B1).
+ * X<sub>carb</sub> = 1 at Δp=0 (no suppression), → 0 as Δp → ∞.
  */
 function xCarb(j_mA, dp_bar) {
   const c0 = co3Interface(j_mA, 0);
@@ -310,7 +310,7 @@ function xCarb(j_mA, dp_bar) {
 }
 
 /**
- * Δp<sub>min</sub>: pressure where X_carb falls to (suppTarget/100).
+ * Δp<sub>min</sub>: pressure where X<sub>carb</sub> falls to (suppTarget/100).
  * suppTarget is a percentage kept (e.g. 50 = keep 50% = suppress 50%).
  */
 function dpMin(j_mA, suppFrac) {
@@ -364,7 +364,7 @@ const CATS = {
           ne:2, dG:1.17, b:.120, j0:2e-3, alpha:.35,
           fe0:[[50,82],[100,87],[150,90],[200,91],[250,91],[300,90],[400,88],[500,86],[600,83],[700,79],[800,74],[900,68],[1000,61]],
           ref:'Zheng et al. Nat.Catal. 2019; Zhang et al. Angew.Chem. 2020',
-          note:'Most resilient FE profile at high j (α=0.35). Liquid product — η_util uses dissolved-phase CO₂ stoichiometry.' },
+          note:'Most resilient FE profile at high j (α=0.35). Liquid product — η<sub>util</sub> uses dissolved-phase CO₂ stoichiometry.' },
 };
 
 function fe0(cat, j) {
@@ -455,12 +455,12 @@ function ua() {
     <div class="mc"><div class="ml">P<sub>flood</flood></div><div class="mv">${pfl.toFixed(2)}<span class="mu">bar</span></div></div>
     <div class="mc"><div class="ml">DPW width</div><div class="mv" style="color:${dpw>0?'var(--gn)':'var(--rd)'}">${dpw.toFixed(2)}<span class="mu">bar</span></div></div>
     <div class="mc"><div class="ml">Status @Δp=${g.dp.toFixed(1)}</div><div class="mv" style="color:${sc};font-size:12px">${ss}</div></div>
-    <div class="mc"><div class="ml">X_carb</div><div class="mv">${xc.toFixed(3)}</div></div>
+    <div class="mc"><div class="ml">X<sub>carb</sub></div><div class="mv">${xc.toFixed(3)}</div></div>
     <div class="mc"><div class="ml">FE (${g.cat})</div><div class="mv">${fv.toFixed(1)}<span class="mu">%</span></div></div>
     <div class="mc"><div class="ml">Energy eff.</div><div class="mv">${ev.toFixed(1)}<span class="mu">%</span></div></div>
-    <div class="mc"><div class="ml">V_cell (${g.cat})</div><div class="mv">${vc.toFixed(2)}<span class="mu">V</span></div></div>
-    <div class="mc"><div class="ml">η_util</div><div class="mv">${uv.toFixed(1)}<span class="mu">%</span></div></div>
-    <div class="mc"><div class="ml">η_mt (mV)</div><div class="mv">${(etaMT(g.j,g.dp,CATS[g.cat].ne,g.te)*1000).toFixed(1)}</div></div>`;
+    <div class="mc"><div class="ml">V<sub>cell</sub> (${g.cat})</div><div class="mv">${vc.toFixed(2)}<span class="mu">V</span></div></div>
+    <div class="mc"><div class="ml">η<sub>util</sub></div><div class="mv">${uv.toFixed(1)}<span class="mu">%</span></div></div>
+    <div class="mc"><div class="ml">η<sub>mt</sub> (mV)</div><div class="mv">${(etaMT(g.j,g.dp,CATS[g.cat].ne,g.te)*1000).toFixed(1)}</div></div>`;
 
   [dP0,dP1,dP2,dP3,dP4,dP5][AT]();
 }
@@ -607,8 +607,8 @@ function dP3() {
     EE:     {no:j=>eeV(g.cat,j,0,g.te), wd:j=>eeV(g.cat,j,g.dp,g.te),   lbl:'Energy efficiency (%)',           mn:0,  mx:80},
     util:   {no:j=>utV(g.cat,j,0,g.fl,g.te), wd:j=>utV(g.cat,j,g.dp,g.fl,g.te), lbl:'CO₂ utilisation (%)',  mn:0,  mx:100},
     Vcell:  {no:j=>vcV(g.cat,j,0,g.te), wd:j=>vcV(g.cat,j,g.dp,g.te),   lbl:'Cell voltage (V)',                mn:1,  mx:8},
-    Xcarb:  {no:j=>xCarb(j,0),          wd:j=>xCarb(j,g.dp),              lbl:'Carbonate fraction X_carb',       mn:0,  mx:1},
-    eta_mt: {no:j=>etaMT(j,0,c.ne,g.te)*1000, wd:j=>etaMT(j,g.dp,c.ne,g.te)*1000, lbl:'Mass transport η_mt (mV)', mn:0, mx:50},
+    Xcarb:  {no:j=>xCarb(j,0),          wd:j=>xCarb(j,g.dp),              lbl:'Carbonate fraction X<sub>carb</sub>',       mn:0,  mx:1},
+    eta_mt: {no:j=>etaMT(j,0,c.ne,g.te)*1000, wd:j=>etaMT(j,g.dp,c.ne,g.te)*1000, lbl:'Mass transport η<sub>mt</sub> (mV)', mn:0, mx:50},
   }[out];
   if(CH.c3)CH.c3.destroy();
   CH.c3 = new Chart(document.getElementById('c3'),{type:'line',
@@ -631,7 +631,7 @@ function dP3() {
     <div class="le"><span class="sw" style="border-top:1.5px dashed ${c.col};background:transparent;height:0"></span>Without Δp</div>
     <div class="le"><span class="sw" style="background:${c.col};border-radius:50%"></span>j=${g.j} mA cm⁻²</div>`;
   document.getElementById('p3inf').innerHTML=`<strong>${c.name} — ${c.prod}</strong> at j=${g.j}, Δp=${g.dp.toFixed(1)} bar:<br>
-    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η_util=${uv2.toFixed(1)}% &nbsp;·&nbsp; V_cell=${vc2.toFixed(2)} V &nbsp;·&nbsp; X_carb=${xCarb(g.j,g.dp).toFixed(3)}<br>
+    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η<sub>util</sub>=${uv2.toFixed(1)}% &nbsp;·&nbsp; V<sub>cell</sub>=${vc2.toFixed(2)} V &nbsp;·&nbsp; X<sub>carb</sub>=${xCarb(g.j,g.dp).toFixed(3)}<br>
     ${c.note}<span class="src">Source: ${c.ref}</span>`;
 }
 
