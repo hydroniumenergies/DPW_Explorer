@@ -142,7 +142,7 @@ footer a:hover{text-decoration:underline}
 </div>
 
 <div class="note-bar" id="notebar">
-  <strong>Model note:</strong> Δp<sub>min</sub> is the pressure at which interfacial [CO₃²⁻] reaches the suppression target (slider above). At the default 200 nm pore, DPW is non-zero from low j. Increasing pore size narrows the window; decreasing it widens it substantially. The suppression target slider lets you explore different engineering acceptance criteria.
+  <strong>Model note:</strong> Δp<sub>min</sub> is the pressure at which interfacial [CO<sub>3</sub><sup>2−</sup>] reaches the suppression target (slider above). At the default 200 nm pore, DPW is non-zero from low j. Increasing pore size narrows the window; decreasing it widens it substantially. The suppression target slider lets you explore different engineering acceptance criteria.
 </div>
 
 <div class="mg" id="lm"></div>
@@ -159,8 +159,8 @@ footer a:hover{text-decoration:underline}
 <!-- ═══ PANEL 0 ═══ -->
 <div class="pnl on" id="p0">
   <div class="eq">
-    [CO₃²⁻]_interface(j,Δp) = [CO₃²⁻]_bulk · 1/(1 + 2.5·[CO₂(aq)]/[OH⁻]_local) &nbsp;<span class="en">[Eq. A1]</span><br>
-    Δp<sub>min</sub>: solve [CO₃²⁻]_interface = target × [CO₃²⁻]_interface(Δp=0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A2]</span><br>
+    [CO<sub>3</sub><sup>2−</sup>]_interface(j,Δp) = [CO<sub>3</sub><sup>2−</sup>]_bulk · 1/(1 + 2.5·[CO₂(aq)]/[OH⁻]_local) &nbsp;<span class="en">[Eq. A1]</span><br>
+    Δp<sub>min</sub>: solve [CO<sub>3</sub><sup>2−</sup>]_interface = target × [CO<sub>3</sub><sup>2−</sup>]_interface(Δp=0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A2]</span><br>
     P<sub>flood</flood> = 4γ|cosθ| / d_pore &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A3]</span>
   </div>
   <div class="cw" style="height:285px"><canvas id="c0"></canvas></div>
@@ -170,7 +170,7 @@ footer a:hover{text-decoration:underline}
     <div class="le"><span class="sw" style="background:var(--bl);opacity:.1;height:9px;border-radius:2px"></span>Stable DPW</div>
     <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Operating point (j, Δp sliders)</div>
   </div>
-  <div class="info"><strong>Why this now works:</strong> Carbonate crossover flux can never be driven to zero by pressure alone — it is dominated by electromigration. Instead, Δp<sub>min</sub> is correctly defined as the pressure that suppresses interfacial [CO₃²⁻] to a chosen fraction of its ambient value (the suppression target slider), preventing GDL pore precipitation. The pore diameter slider controls P<sub>flood</flood> (ceiling). Smaller pores = higher ceiling = wider window.</div>
+  <div class="info"><strong>Why this now works:</strong> Carbonate crossover flux can never be driven to zero by pressure alone — it is dominated by electromigration. Instead, Δp<sub>min</sub> is correctly defined as the pressure that suppresses interfacial [CO<sub>3</sub><sup>2−</sup>] to a chosen fraction of its ambient value (the suppression target slider), preventing GDL pore precipitation. The pore diameter slider controls P<sub>flood</flood> (ceiling). Smaller pores = higher ceiling = wider window.</div>
 </div>
 
 <!-- ═══ PANEL 1 ═══ -->
@@ -210,7 +210,7 @@ footer a:hover{text-decoration:underline}
 <!-- ═══ PANEL 3 ═══ -->
 <div class="pnl" id="p3">
   <div class="eq">
-    X<sub>carb</sub>(j,Δp) = [CO₃²⁻](j,Δp) / [CO₃²⁻](j,0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B1]</span><br>
+    X<sub>carb</sub>(j,Δp) = [CO<sub>3</sub><sup>2−</sup>](j,Δp) / [CO<sub>3</sub><sup>2−</sup>](j,0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B1]</span><br>
     FE(j,Δp) = FE₀(j)·[1 − α·X<sub>carb</sub>] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B2]</span><br>
     V<sub>cell</sub> = E_eq + b·log(j/j₀) + η<sub>OER</sub> + η<sub>mt</sub>(j,Δp) + j·R_mem(X<sub>carb</sub>) &nbsp;&nbsp;<span class="en">[Eq. B3]</span><br>
     EE = FE·(ΔG°/n_eF) / V<sub>cell</sub> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B4]</span>
@@ -281,7 +281,7 @@ const R_gas=L_GDL/D_GDL + L_MPL/D_MPL;
 /**
  * Interfacial carbonate concentration via CO₂/OH⁻ competition (Eq. A1).
  * Physically: elevated p_CO₂ increases [CO₂(aq)], competes with OH⁻
- * for the carbonate-forming pathway, suppressing [CO₃²⁻] at interface.
+ * for the carbonate-forming pathway, suppressing [CO<sub>3</sub><sup>2−</sup>] at interface.
  */
 function co3Interface(j_mA, dp_bar) {
   const jA = j_mA * 10;                        // A/m²
@@ -447,7 +447,7 @@ function ua() {
   if (dpw <= 0) {
     nb.innerHTML = `<strong>DPW is zero</strong> at current settings: P<sub>flood</flood> (${pfl.toFixed(2)} bar) ≤ Δp<sub>min</sub> (${dpm.toFixed(2)} bar). Try: decrease pore diameter, increase contact angle, or reduce the suppression target slider (less strict criterion).`;
   } else {
-    nb.innerHTML = `<strong>DPW = ${dpw.toFixed(2)} bar</strong> at j=${g.j} mA cm⁻². Operating point (Δp=${g.dp.toFixed(1)} bar) is ${ok?'inside ✓ the DPW':'outside ✗ the DPW'}. Suppression criterion: reduce [CO₃²⁻] to ≤${(g.st*100).toFixed(0)}% of ambient value.`;
+    nb.innerHTML = `<strong>DPW = ${dpw.toFixed(2)} bar</strong> at j=${g.j} mA cm⁻². Operating point (Δp=${g.dp.toFixed(1)} bar) is ${ok?'inside ✓ the DPW':'outside ✗ the DPW'}. Suppression criterion: reduce [CO<sub>3</sub><sup>2−</sup>] to ≤${(g.st*100).toFixed(0)}% of ambient value.`;
   }
 
   document.getElementById('lm').innerHTML = `
