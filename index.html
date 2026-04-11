@@ -16,7 +16,7 @@
   --bl:#1a5fa8;--bll:#e8f0fa;--rd:#b83232;--rdl:#faeaea;
   --gn:#1a7a52;--gnl:#e6f5ee;--am:#a05c12;--aml:#fdf3e3;
   --pu:#4a2d8a;--pul:#f0ebff;--tl:#0e6b6b;--tll:#e0f5f5;
-  --mn:'JetBrains Mono',monospace;--sr:'Source Serif 4',Georgia,serif;--sn:'DM Sans',system-ui,sans-serif;
+  --mn:'JetBrains Mono',monospace;--sr:'Times New Roman',Georgia,serif;--sn:'Times New Roman',Georgia,serif;
 }
 @media(prefers-color-scheme:dark){:root{
   --bg:#131210;--sf:#1e1c19;--s2:#262420;--bd:#363330;--b2:#4a4742;
@@ -452,7 +452,7 @@ const CH = {};
 const DK = () => matchMedia('(prefers-color-scheme:dark)').matches;
 const GC = () => DK() ? '#2a2825' : '#ede9e2';
 const TC = () => DK() ? '#9e9890' : '#6b6560';
-const MN = "'JetBrains Mono',monospace";
+const MN = "'Times New Roman',Georgia,serif";
 let AT = 0;
 
 function st(i) {
