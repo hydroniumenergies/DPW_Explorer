@@ -140,14 +140,14 @@ footer a:hover{text-decoration:underline}
 <header>
 <div class="hdr">
   <div class="bdg">Supplementary Interactive Figure &nbsp;<span>S1 · v3.1 — Bug Fixed</span></div>
-  <h1>Differential Pressure Engineering as a Primary Strategy to Mitigate Carbonate Formation in <em>CO₂ Electrolysers</em></h1>
+  <h1>Differential Pressure Engineering as a Primary Strategy to Mitigate Carbonate Formation in CO₂ Electrolysers</h1>
   <p class="byl"><strong>Sankeerthana Bellamkonda, Karthik Seemakurthy</strong> &nbsp;·&nbsp; Hydronium Energies Ltd., Meadowbank Gardens, Cranford, London TW5 9TU, UK<br><em>Perspectives in Energy &amp; Electrochemistry</em>, 2026</p>
-  <p class="abs">v3.1 corrects a unit error in the membrane potential calculation that caused DPW to always read zero. The suppression mechanism is the CO₂/OH⁻ competition at the cathode interface. Δp_min is defined as the pressure achieving 50% carbonate suppression at the interface — physically grounded in preventing GDL salt precipitation, not requiring complete elimination of crossover flux. All eight global sliders update all six panels live. Range: 50–1000 mA cm⁻².</p>
+  <p class="abs">v3.1 corrects a unit error in the membrane potential calculation that caused DPW to always read zero. The suppression mechanism is the CO₂/OH⁻ competition at the cathode interface. Δp<sub>min</sub> is defined as the pressure achieving 50% carbonate suppression at the interface — physically grounded in preventing GDL salt precipitation, not requiring complete elimination of crossover flux. All eight global sliders update all six panels live. Range: 50–1000 mA cm⁻².</p>
   <div class="pills">
     <span class="pill b">DOI: 10.1039/XXXX</span>
     <span class="pill g">v3.1 · Bug fix · Non-zero DPW verified</span>
-    <span class="pill a">Δp_min = 50% carbonate suppression criterion</span>
-    <span class="dpill g" title="Δp_min solved by 52-step bisection over [0, 20] bar — precision &lt;0.001 bar, ~0.1 ms per call. All 6 panels update synchronously on every slider event. No server — all physics runs locally in your browser.">⚡ In-browser solver · 52-step bisection</span>
+    <span class="pill a">Δp<sub>min</sub> = 50% carbonate suppression criterion</span>
+    <span class="dpill g" title="Δp<sub>min</sub> solved by 52-step bisection over [0, 20] bar — precision &lt;0.001 bar, ~0.1 ms per call. All 6 panels update synchronously on every slider event. No server — all physics runs locally in your browser.">⚡ In-browser solver · 52-step bisection</span>
   </div>
 </div>
 </header>
@@ -159,13 +159,13 @@ footer a:hover{text-decoration:underline}
   <div class="gbt">Operating conditions &amp; electrode architecture</div>
   <div class="gcs">
     <div class="gc"><label title="j — electrochemical current per unit electrode area (mA cm⁻²). Industrial target: ≥300 mA cm⁻². Model range: 50–1000 mA cm⁻²." style="cursor:help;border-bottom:1px dotted var(--mt)">Current density j ℹ</label><div class="gcr"><input type="range" id="Gj" min="50" max="1000" value="300" step="10" oninput="ua()"><span class="gv" id="Vj">300 mA cm⁻²</span></div></div>
-    <div class="gc"><label title="Δp = p_cathode − p_anode (bar). The engineering lever of this work. Must exceed Δp_min to suppress carbonate; must stay below P_flood to prevent GDL flooding." style="cursor:help;border-bottom:1px dotted var(--mt)">Differential pressure Δp ℹ</label><div class="gcr"><input type="range" id="Gdp" min="0" max="15" value="2.0" step="0.1" oninput="ua()"><span class="gv" id="Vdp">2.0 bar</span></div></div>
-    <div class="gc"><label title="f_targ — the fraction of ambient-pressure [CO₃²⁻] that is acceptable at the cathode interface. 50% = keep ≤50% of baseline carbonate. Lower = stricter = higher Δp_min required." style="cursor:help;border-bottom:1px dotted var(--mt)">Suppression target (% of baseline) ℹ</label><div class="gcr"><input type="range" id="Gst" min="10" max="80" value="50" step="5" oninput="ua()"><span class="gv" id="Vst">50%</span></div></div>
-    <div class="gc"><label title="θ — effective water contact angle of the MPL surface (degrees). Determined by PTFE or fluorosilane loading. θ>90° = hydrophobic. Sets the P_flood ceiling via Young–Laplace: P_flood = 4γ|cosθ|/d_pore." style="cursor:help;border-bottom:1px dotted var(--mt)">GDL contact angle θ ℹ</label><div class="gcr"><input type="range" id="Gth" min="90" max="155" value="150" step="1" oninput="ua()"><span class="gv" id="Vth">150°</span></div></div>
-    <div class="gc"><label title="d_pore — target minimum pore diameter of the microporous layer (nm). Smaller pores = higher P_flood = wider DPW ceiling. Commercial GDL: ~300–500 nm. Engineered MPL: 50–200 nm." style="cursor:help;border-bottom:1px dotted var(--mt)">MPL pore diameter ℹ</label><div class="gcr"><input type="range" id="Gpo" min="50" max="800" value="100" step="10" oninput="ua()"><span class="gv" id="Vpo">100 nm</span></div></div>
-    <div class="gc"><label title="δ — AEM membrane thickness (µm). Does not affect Δp_min in v3.1 (suppression is interface-controlled). Affects cell voltage via ohmic resistance. Typical: 20–80 µm." style="cursor:help;border-bottom:1px dotted var(--mt)">Membrane thickness δ ℹ</label><div class="gcr"><input type="range" id="Gde" min="20" max="100" value="50" step="5" oninput="ua()"><span class="gv" id="Vde">50 µm</span></div></div>
-    <div class="gc"><label title="φ_CO₂ — volumetric CO₂ feed flow rate per cm² electrode area. Sets single-pass utilisation η_util. Lower flow = higher utilisation but risks CO₂ starvation at high j." style="cursor:help;border-bottom:1px dotted var(--mt)">CO₂ feed flow (mL min⁻¹ cm⁻²) ℹ</label><div class="gcr"><input type="range" id="Gfl" min="1" max="50" value="10" step="1" oninput="ua()"><span class="gv" id="Vfl">10 mL/min/cm²</span></div></div>
-    <div class="gc"><label title="T — operating temperature (°C). Affects KH(T) and Ka1,Ka2(T) via Plummer & Busenberg (1982). Higher T reduces CO₂ solubility → higher Δp_min. At 80°C, Δp_min nearly triples vs 25°C." style="cursor:help;border-bottom:1px dotted var(--mt)">Temperature T ℹ</label><div class="gcr"><input type="range" id="Gte" min="20" max="80" value="25" step="5" oninput="ua()"><span class="gv" id="Vte">25°C</span></div></div>
+    <div class="gc"><label title="Δp = p_cathode − p_anode (bar). The engineering lever of this work. Must exceed Δp<sub>min</sub> to suppress carbonate; must stay below P<sub>flood</sub> to prevent GDL flooding." style="cursor:help;border-bottom:1px dotted var(--mt)">Differential pressure Δp ℹ</label><div class="gcr"><input type="range" id="Gdp" min="0" max="15" value="2.0" step="0.1" oninput="ua()"><span class="gv" id="Vdp">2.0 bar</span></div></div>
+    <div class="gc"><label title="f<sub>targ</sub> — the fraction of ambient-pressure [CO₃²⁻] that is acceptable at the cathode interface. 50% = keep ≤50% of baseline carbonate. Lower = stricter = higher Δp<sub>min</sub> required." style="cursor:help;border-bottom:1px dotted var(--mt)">Suppression target (% of baseline) ℹ</label><div class="gcr"><input type="range" id="Gst" min="10" max="80" value="50" step="5" oninput="ua()"><span class="gv" id="Vst">50%</span></div></div>
+    <div class="gc"><label title="θ — effective water contact angle of the MPL surface (degrees). Determined by PTFE or fluorosilane loading. θ>90° = hydrophobic. Sets the P<sub>flood</sub> ceiling via Young–Laplace: P<sub>flood</sub> = 4γ|cosθ|/d_pore." style="cursor:help;border-bottom:1px dotted var(--mt)">GDL contact angle θ ℹ</label><div class="gcr"><input type="range" id="Gth" min="90" max="155" value="150" step="1" oninput="ua()"><span class="gv" id="Vth">150°</span></div></div>
+    <div class="gc"><label title="d_pore — target minimum pore diameter of the microporous layer (nm). Smaller pores = higher P<sub>flood</sub> = wider DPW ceiling. Commercial GDL: ~300–500 nm. Engineered MPL: 50–200 nm." style="cursor:help;border-bottom:1px dotted var(--mt)">MPL pore diameter ℹ</label><div class="gcr"><input type="range" id="Gpo" min="50" max="800" value="100" step="10" oninput="ua()"><span class="gv" id="Vpo">100 nm</span></div></div>
+    <div class="gc"><label title="δ — AEM membrane thickness (µm). Does not affect Δp<sub>min</sub> in v3.1 (suppression is interface-controlled). Affects cell voltage via ohmic resistance. Typical: 20–80 µm." style="cursor:help;border-bottom:1px dotted var(--mt)">Membrane thickness δ ℹ</label><div class="gcr"><input type="range" id="Gde" min="20" max="100" value="50" step="5" oninput="ua()"><span class="gv" id="Vde">50 µm</span></div></div>
+    <div class="gc"><label title="φ_CO₂ — volumetric CO₂ feed flow rate per cm² electrode area. Sets single-pass utilisation η<sub>util</sub>. Lower flow = higher utilisation but risks CO₂ starvation at high j." style="cursor:help;border-bottom:1px dotted var(--mt)">CO₂ feed flow (mL min⁻¹ cm⁻²) ℹ</label><div class="gcr"><input type="range" id="Gfl" min="1" max="50" value="10" step="1" oninput="ua()"><span class="gv" id="Vfl">10 mL/min/cm²</span></div></div>
+    <div class="gc"><label title="T — operating temperature (°C). Affects KH(T) and Ka1,Ka2(T) via Plummer & Busenberg (1982). Higher T reduces CO₂ solubility → higher Δp<sub>min</sub>. At 80°C, Δp<sub>min</sub> nearly triples vs 25°C." style="cursor:help;border-bottom:1px dotted var(--mt)">Temperature T ℹ</label><div class="gcr"><input type="range" id="Gte" min="20" max="80" value="25" step="5" oninput="ua()"><span class="gv" id="Vte">25°C</span></div></div>
     <div class="gc"><label>Catalyst system</label>
       <select id="Gcat" onchange="ua()">
         <option value="Ag">Ag — CO (Siemens-type)</option>
@@ -176,8 +176,8 @@ footer a:hover{text-decoration:underline}
   </div>
 </div>
 
-<div class="note-bar" id="notebar" title="Δp_min is from a physically-grounded model. Key semi-empirical parameter: α_c=2.5 (CO₂/OH⁻ competition coefficient, calibrated to pH 7–9 operating regime, uncertainty ±30–40%). See Supporting Information §S4.2.">
-  <strong>Model note:</strong> Δp_min is the pressure at which interfacial [CO₃²⁻] reaches the suppression target (slider above). At the default 200 nm pore, DPW is non-zero from low j. Increasing pore size narrows the window; decreasing it widens it substantially. The suppression target slider lets you explore different engineering acceptance criteria.
+<div class="note-bar" id="notebar" title="Δp<sub>min</sub> is from a physically-grounded model. Key semi-empirical parameter: α_c=2.5 (CO₂/OH⁻ competition coefficient, calibrated to pH 7–9 operating regime, uncertainty ±30–40%). See Supporting Information §S4.2.">
+  <strong>Model note:</strong> Δp<sub>min</sub> is the pressure at which interfacial [CO₃²⁻] reaches the suppression target (slider above). At the default 200 nm pore, DPW is non-zero from low j. Increasing pore size narrows the window; decreasing it widens it substantially. The suppression target slider lets you explore different engineering acceptance criteria.
 </div>
 
 <div class="mg" id="lm"></div>
@@ -195,18 +195,18 @@ footer a:hover{text-decoration:underline}
 <div class="pnl on" id="p0">
   <div class="eq">
     [CO₃²⁻]_interface(j,Δp) = [CO₃²⁻]_bulk · 1/(1 + 2.5·[CO₂(aq)]/[OH⁻]_local) &nbsp;<span class="en">[Eq. A1]</span><br>
-    Δp_min: solve [CO₃²⁻]_interface = target × [CO₃²⁻]_interface(Δp=0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A2]</span><br>
-    P_flood = 4γ|cosθ| / d_pore &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A3]</span>
+    Δp<sub>min</sub>: solve [CO₃²⁻]_interface = target × [CO₃²⁻]_interface(Δp=0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A2]</span><br>
+    P<sub>flood</sub> = 4γ|cosθ| / d_pore &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A3]</span>
   </div>
   <div class="export-bar"><button class="exp-btn" onclick="exportPNG('c0','DPW_Map')" title="Download this chart as a high-resolution PNG">⬇ PNG</button><button class="exp-btn" onclick="exportCSV('c0')" title="Download the chart data as a CSV file">⬇ CSV</button></div>
     <div class="cw" style="height:285px"><canvas id="c0"></canvas></div>
   <div class="lr">
-    <div class="le"><span class="sw" style="background:var(--bl)"></span>Δp_min(j) — suppression threshold</div>
-    <div class="le"><span class="sw" style="border-top:1.5px dashed var(--rd);background:transparent;height:0"></span>P_flood limit</div>
+    <div class="le"><span class="sw" style="background:var(--bl)"></span>Δp<sub>min</sub>(j) — suppression threshold</div>
+    <div class="le"><span class="sw" style="border-top:1.5px dashed var(--rd);background:transparent;height:0"></span>P<sub>flood</sub> limit</div>
     <div class="le"><span class="sw" style="background:var(--bl);opacity:.1;height:9px;border-radius:2px"></span>Stable DPW</div>
     <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Operating point (j, Δp sliders)</div>
   </div>
-  <div class="info"><strong>Why this now works:</strong> Carbonate crossover flux can never be driven to zero by pressure alone — it is dominated by electromigration. Instead, Δp_min is correctly defined as the pressure that suppresses interfacial [CO₃²⁻] to a chosen fraction of its ambient value (the suppression target slider), preventing GDL pore precipitation. The pore diameter slider controls P_flood (ceiling). Smaller pores = higher ceiling = wider window.</div>
+  <div class="info"><strong>Why this now works:</strong> Carbonate crossover flux can never be driven to zero by pressure alone — it is dominated by electromigration. Instead, Δp<sub>min</sub> is correctly defined as the pressure that suppresses interfacial [CO₃²⁻] to a chosen fraction of its ambient value (the suppression target slider), preventing GDL pore precipitation. The pore diameter slider controls P<sub>flood</sub> (ceiling). Smaller pores = higher ceiling = wider window.</div>
 </div>
 
 <!-- ═══ PANEL 1 ═══ -->
@@ -242,15 +242,15 @@ footer a:hover{text-decoration:underline}
     <div class="le"><span class="sw" style="background:var(--bl)"></span>GDL flooding / membrane rupture (Δp too high)</div>
     <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Current (j, Δp) operating point</div>
   </div>
-  <div class="info">The risk map shows the correct physics: the carbonate risk zone (red) expands rightward as j increases, because Δp_min rises with j (more OH⁻ produced → more CO₂ needed to suppress it). The flooding zone (blue) is fixed by GDL architecture. Changing pore size or contact angle shifts the blue boundary; changing j or suppression target shifts the red boundary.</div>
+  <div class="info">The risk map shows the correct physics: the carbonate risk zone (red) expands rightward as j increases, because Δp<sub>min</sub> rises with j (more OH⁻ produced → more CO₂ needed to suppress it). The flooding zone (blue) is fixed by GDL architecture. Changing pore size or contact angle shifts the blue boundary; changing j or suppression target shifts the red boundary.</div>
 </div>
 
 <!-- ═══ PANEL 3 ═══ -->
 <div class="pnl" id="p3">
   <div class="eq">
-    X_carb(j,Δp) = [CO₃²⁻](j,Δp) / [CO₃²⁻](j,0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B1]</span><br>
-    FE(j,Δp) = FE₀(j)·[1 − α·X_carb] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B2]</span><br>
-    V_cell = E_eq + b·log(j/j₀) + η_OER + η_mt(j,Δp) + j·R_mem(X_carb) &nbsp;&nbsp;<span class="en">[Eq. B3]</span><br>
+    X<sub>carb</sub>(j,Δp) = [CO₃²⁻](j,Δp) / [CO₃²⁻](j,0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B1]</span><br>
+    FE(j,Δp) = FE₀(j)·[1 − α·X<sub>carb</sub>] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B2]</span><br>
+    V_cell = E_eq + b·log(j/j₀) + η_OER + η_mt(j,Δp) + j·R_mem(X<sub>carb</sub>) &nbsp;&nbsp;<span class="en">[Eq. B3]</span><br>
     EE = FE·(ΔG°/n_eF) / V_cell &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B4]</span>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.7rem">
@@ -260,14 +260,14 @@ footer a:hover{text-decoration:underline}
         <option value="EE">Energy efficiency (%)</option>
         <option value="util">Single-pass CO₂ utilisation (%) ⚠ qualitative</option>
         <option value="Vcell">Cell voltage (V)</option>
-        <option value="Xcarb">Carbonate fraction X_carb (0–1)</option>
+        <option value="Xcarb">Carbonate fraction X<sub>carb</sub> (0–1)</option>
         <option value="eta_mt">Mass transport overpotential (mV)</option>
       </select>
     </div>
   </div>
   <div class="export-bar"><button class="exp-btn" onclick="exportPNG('c3','Performance')" title="Download this chart as a high-resolution PNG">⬇ PNG</button><button class="exp-btn" onclick="exportCSV('c3')" title="Download the chart data as a CSV file">⬇ CSV</button></div>
     
-<div id="util-disclaimer" style="display:none;margin:.5rem 0;padding:7px 12px;background:var(--aml);border:1px solid var(--am);border-radius:5px;font-family:var(--mn);font-size:10.5px;color:var(--am);line-height:1.6"><strong>⚠ Qualitative output only.</strong> η_util includes an empirical pressure-bonus term (min(20, Δp×2) percentage points) representing carbonate regeneration — not rigorously derived. Do not cite absolute η_util values as quantitative predictions. See Supporting Information §S4.2 and Table S5.</div>
+<div id="util-disclaimer" style="display:none;margin:.5rem 0;padding:7px 12px;background:var(--aml);border:1px solid var(--am);border-radius:5px;font-family:var(--mn);font-size:10.5px;color:var(--am);line-height:1.6"><strong>⚠ Qualitative output only.</strong> η<sub>util</sub> includes an empirical pressure-bonus term (min(20, Δp×2) percentage points) representing carbonate regeneration — not rigorously derived. Do not cite absolute η<sub>util</sub> values as quantitative predictions. See Supporting Information §S4.2 and Table S5.</div>
   <div class="cw" style="height:295px"><canvas id="c3"></canvas></div>
   <div class="lr" id="p3lr"></div>
   <div class="info" id="p3inf"></div>
@@ -345,8 +345,8 @@ function co3Interface(j_mA, dp_bar) {
 }
 
 /**
- * Carbonate suppression fraction X_carb (Eq. B1).
- * X_carb = 1 at Δp=0 (no suppression), → 0 as Δp → ∞.
+ * Carbonate suppression fraction X<sub>carb</sub> (Eq. B1).
+ * X<sub>carb</sub> = 1 at Δp=0 (no suppression), → 0 as Δp → ∞.
  */
 function xCarb(j_mA, dp_bar) {
   const c0 = co3Interface(j_mA, 0);
@@ -355,7 +355,7 @@ function xCarb(j_mA, dp_bar) {
 }
 
 /**
- * Δp_min: pressure where X_carb falls to (suppTarget/100).
+ * Δp<sub>min</sub>: pressure where X<sub>carb</sub> falls to (suppTarget/100).
  * suppTarget is a percentage kept (e.g. 50 = keep 50% = suppress 50%).
  */
 function dpMin(j_mA, suppFrac) {
@@ -409,7 +409,7 @@ const CATS = {
           ne:2, dG:1.17, b:.120, j0:2e-3, alpha:.35,
           fe0:[[50,82],[100,87],[150,90],[200,91],[250,91],[300,90],[400,88],[500,86],[600,83],[700,79],[800,74],[900,68],[1000,61]],
           ref:'Zheng et al. Nat.Catal. 2019; Zhang et al. Angew.Chem. 2020',
-          note:'Most resilient FE profile at high j (α=0.35). Liquid product — η_util uses dissolved-phase CO₂ stoichiometry.' },
+          note:'Most resilient FE profile at high j (α=0.35). Liquid product — η<sub>util</sub> uses dissolved-phase CO₂ stoichiometry.' },
 };
 
 function fe0(cat, j) {
@@ -490,21 +490,21 @@ function ua() {
   // Update note bar based on DPW
   const nb = document.getElementById('notebar');
   if (dpw <= 0) {
-    nb.innerHTML = `<strong>DPW is zero</strong> at current settings: P_flood (${pfl.toFixed(2)} bar) ≤ Δp_min (${dpm.toFixed(2)} bar). Try: decrease pore diameter, increase contact angle, or reduce the suppression target slider (less strict criterion).`;
+    nb.innerHTML = `<strong>DPW is zero</strong> at current settings: P<sub>flood</sub> (${pfl.toFixed(2)} bar) ≤ Δp<sub>min</sub> (${dpm.toFixed(2)} bar). Try: decrease pore diameter, increase contact angle, or reduce the suppression target slider (less strict criterion).`;
   } else {
     nb.innerHTML = `<strong>DPW = ${dpw.toFixed(2)} bar</strong> at j=${g.j} mA cm⁻². Operating point (Δp=${g.dp.toFixed(1)} bar) is ${ok?'inside ✓ the DPW':'outside ✗ the DPW'}. Suppression criterion: reduce [CO₃²⁻] to ≤${(g.st*100).toFixed(0)}% of ambient value.`;
   }
 
   document.getElementById('lm').innerHTML = `
-    <div class="mc"><div class="ml">Δp_min @${g.j}mA</div><div class="mv">${dpm.toFixed(2)}<span class="mu">bar</span></div></div>
-    <div class="mc"><div class="ml">P_flood</div><div class="mv">${pfl.toFixed(2)}<span class="mu">bar</span></div></div>
+    <div class="mc"><div class="ml">Δp<sub>min</sub> @${g.j}mA</div><div class="mv">${dpm.toFixed(2)}<span class="mu">bar</span></div></div>
+    <div class="mc"><div class="ml">P<sub>flood</sub></div><div class="mv">${pfl.toFixed(2)}<span class="mu">bar</span></div></div>
     <div class="mc"><div class="ml">DPW width</div><div class="mv" style="color:${dpw>0?'var(--gn)':'var(--rd)'}">${dpw.toFixed(2)}<span class="mu">bar</span></div></div>
     <div class="mc"><div class="ml">Status @Δp=${g.dp.toFixed(1)}</div><div class="mv" style="color:${sc};font-size:12px">${ss}</div></div>
-    <div class="mc"><div class="ml">X_carb</div><div class="mv">${xc.toFixed(3)}</div></div>
+    <div class="mc"><div class="ml">X<sub>carb</sub></div><div class="mv">${xc.toFixed(3)}</div></div>
     <div class="mc"><div class="ml">FE (${g.cat})</div><div class="mv">${fv.toFixed(1)}<span class="mu">%</span></div></div>
     <div class="mc"><div class="ml">Energy eff.</div><div class="mv">${ev.toFixed(1)}<span class="mu">%</span></div></div>
     <div class="mc"><div class="ml">V_cell (${g.cat})</div><div class="mv">${vc.toFixed(2)}<span class="mu">V</span></div></div>
-    <div class="mc"><div class="ml">η_util</div><div class="mv">${uv.toFixed(1)}<span class="mu">%</span></div></div>
+    <div class="mc"><div class="ml">η<sub>util</sub></div><div class="mv">${uv.toFixed(1)}<span class="mu">%</span></div></div>
     <div class="mc"><div class="ml">η_mt (mV)</div><div class="mv">${(etaMT(g.j,g.dp,CATS[g.cat].ne,g.te)*1000).toFixed(1)}</div></div>`;
 
   [dP0,dP1,dP2,dP3,dP4,dP5][AT]();
@@ -519,8 +519,8 @@ function dP0() {
   if (CH.c0) CH.c0.destroy();
   CH.c0 = new Chart(document.getElementById('c0'), { type:'line',
     data: { labels: js, datasets: [
-      { label:'Δp_min', data:dpm, borderColor:'#1a5fa8', backgroundColor:'rgba(26,95,168,.08)', fill:'+1', tension:.35, pointRadius:0, borderWidth:2 },
-      { label:'P_flood', data:js.map(()=>pfl), borderColor:'#b83232', borderDash:[6,3], fill:false, pointRadius:0, borderWidth:1.5 },
+      { label:'Δp<sub>min</sub>', data:dpm, borderColor:'#1a5fa8', backgroundColor:'rgba(26,95,168,.08)', fill:'+1', tension:.35, pointRadius:0, borderWidth:2 },
+      { label:'P<sub>flood</sub>', data:js.map(()=>pfl), borderColor:'#b83232', borderDash:[6,3], fill:false, pointRadius:0, borderWidth:1.5 },
       { label:'Op', type:'scatter', data:[{x:g.j, y:g.dp}], backgroundColor:'#a05c12', pointRadius:9, showLine:false },
     ]},
     options: { responsive:true, maintainAspectRatio:false,
@@ -652,7 +652,7 @@ function dP3() {
     EE:     {no:j=>eeV(g.cat,j,0,g.te), wd:j=>eeV(g.cat,j,g.dp,g.te),   lbl:'Energy efficiency (%)',           mn:0,  mx:80},
     util:   {no:j=>utV(g.cat,j,0,g.fl,g.te), wd:j=>utV(g.cat,j,g.dp,g.fl,g.te), lbl:'CO₂ utilisation (%)',  mn:0,  mx:100},
     Vcell:  {no:j=>vcV(g.cat,j,0,g.te), wd:j=>vcV(g.cat,j,g.dp,g.te),   lbl:'Cell voltage (V)',                mn:1,  mx:8},
-    Xcarb:  {no:j=>xCarb(j,0),          wd:j=>xCarb(j,g.dp),              lbl:'Carbonate fraction X_carb',       mn:0,  mx:1},
+    Xcarb:  {no:j=>xCarb(j,0),          wd:j=>xCarb(j,g.dp),              lbl:'Carbonate fraction X<sub>carb</sub>',       mn:0,  mx:1},
     eta_mt: {no:j=>etaMT(j,0,c.ne,g.te)*1000, wd:j=>etaMT(j,g.dp,c.ne,g.te)*1000, lbl:'Mass transport η_mt (mV)', mn:0, mx:50},
   }[out];
   if(CH.c3)CH.c3.destroy();
@@ -676,7 +676,7 @@ function dP3() {
     <div class="le"><span class="sw" style="border-top:1.5px dashed ${c.col};background:transparent;height:0"></span>Without Δp</div>
     <div class="le"><span class="sw" style="background:${c.col};border-radius:50%"></span>j=${g.j} mA cm⁻²</div>`;
   document.getElementById('p3inf').innerHTML=`<strong>${c.name} — ${c.prod}</strong> at j=${g.j}, Δp=${g.dp.toFixed(1)} bar:<br>
-    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η_util=${uv2.toFixed(1)}% &nbsp;·&nbsp; V_cell=${vc2.toFixed(2)} V &nbsp;·&nbsp; X_carb=${xCarb(g.j,g.dp).toFixed(3)}<br>
+    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η<sub>util</sub>=${uv2.toFixed(1)}% &nbsp;·&nbsp; V_cell=${vc2.toFixed(2)} V &nbsp;·&nbsp; X<sub>carb</sub>=${xCarb(g.j,g.dp).toFixed(3)}<br>
     ${c.note}<span class="src">Source: ${c.ref}</span>`;
 }
 
@@ -735,7 +735,7 @@ function dP5() {
   const sp=PSET.find(p=>p.id===selP);
   const pfl2=pflood(sp.th,sp.po), dpm2=dpMin(g.j,g.st);
   document.getElementById('pins').innerHTML=`<strong>${sp.id}: ${sp.title}</strong> — j=${g.j} mA cm⁻², suppression target=${(g.st*100).toFixed(0)}%<br>
-    Δp_min=${dpm2.toFixed(2)} bar · P_flood=${pfl2.toFixed(2)} bar · DPW=${Math.max(0,pfl2-dpm2).toFixed(2)} bar · Cost ${sp.cost.toFixed(1)}×<br><br>${sp.note}`;
+    Δp<sub>min</sub>=${dpm2.toFixed(2)} bar · P<sub>flood</sub>=${pfl2.toFixed(2)} bar · DPW=${Math.max(0,pfl2-dpm2).toFixed(2)} bar · Cost ${sp.cost.toFixed(1)}×<br><br>${sp.note}`;
   if(CH.c5)CH.c5.destroy();
   CH.c5=new Chart(document.getElementById('c5'),{type:'scatter',
     data:{datasets:PSET.map(p=>{const pf=pflood(p.th,p.po),dm=dpMin(g.j,g.st),dw=Math.max(0,pf-dm);
@@ -830,7 +830,7 @@ function exportCSV(canvasId) {
 
   const csvContent = [
     `# DPW Model Export — j=${g.j} mA/cm² | Δp=${g.dp.toFixed(1)} bar | T=${g.te}°C`,
-    `# θ=${g.th}° | d_pore=${g.po}nm | f_targ=${(g.st*100).toFixed(0)}%`,
+    `# θ=${g.th}° | d_pore=${g.po}nm | f<sub>targ</sub>=${(g.st*100).toFixed(0)}%`,
     `# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}`,
     `# Source: Bellamkonda & Seemakurthy, Hydronium Energies Ltd. (2026)`,
     headers.join(','),
@@ -845,7 +845,7 @@ function exportCSV(canvasId) {
   URL.revokeObjectURL(a.href);
 }
 
-// ── Show/hide η_util disclaimer ───────────────────────────────────
+// ── Show/hide η<sub>util</sub> disclaimer ───────────────────────────────────
 function toggleUtilDisclaimer() {
   const sel = document.getElementById('P3o');
   const disc = document.getElementById('util-disclaimer');
