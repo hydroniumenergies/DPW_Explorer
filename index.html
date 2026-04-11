@@ -524,8 +524,8 @@ function dP0() {
     options: { responsive:true, maintainAspectRatio:false,
       plugins: { legend:{display:false}, tooltip:{callbacks:{label:c => c.dataset.label==='Op' ? `j=${g.j} mA, Δp=${g.dp.toFixed(1)} bar` : c.dataset.label+': '+c.parsed.y.toFixed(2)+' bar'}} },
       scales: {
-        x: { title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:10,family:MN}}, grid:{color:GC()}, ticks:{color:TC(),font:{size:9},maxTicksLimit:11} },
-        y: { title:{display:true,text:'Δp (bar)',color:TC(),font:{size:10,family:MN}}, min:0, max:Math.max(pfl*1.3, g.dp*1.2, 3), grid:{color:GC()}, ticks:{color:TC(),font:{size:9}} }
+        x: { title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:15,family:MN}}, grid:{color:GC()}, ticks:{color:TC(),font:{size:12},maxTicksLimit:11} },
+        y: { title:{display:true,text:'Δp (bar)',color:TC(),font:{size:15,family:MN}}, min:0, max:Math.max(pfl*1.3, g.dp*1.2, 3), grid:{color:GC()}, ticks:{color:TC(),font:{size:12}} }
       }
     }
   });
