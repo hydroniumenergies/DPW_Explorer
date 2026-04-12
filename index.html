@@ -769,7 +769,7 @@ function dP3() {
     ${c.note}<span class="src">Source: ${c.ref}</span>`;
 }
 
-// ════ P4: Catalysts ═══════════════════════════════════════════════
+// ════ P4: Catalysts (Typography Updated) ══════════════════════════
 function dP4() {
   const g = G();
   const ks = ['Cu','Ag','BiSn'];
@@ -781,25 +781,33 @@ function dP4() {
     ccs.appendChild(d);
   });
   const js=[]; for(let j=50;j<=1000;j+=20) js.push(j);
+  
   if(CH.c4a)CH.c4a.destroy();
   CH.c4a=new Chart(document.getElementById('c4a'),{type:'line',data:{datasets:ks.flatMap(k=>[
     {label:`${k} no Δp`,data:js.map(j=>({x:j,y:feV(k,j,0,g.te)})),borderColor:CATS[k].col+'55',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0},
     {label:`${k} Δp=${g.dp.toFixed(1)}`,data:js.map(j=>({x:j,y:feV(k,j,g.dp,g.te)})),borderColor:CATS[k].col,borderWidth:2,pointRadius:0,tension:0},
   ])},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:false},tooltip:{callbacks:{label:c2=>c2.dataset.label+': '+c2.parsed.y.toFixed(1)+'%'}}},
-    scales:{x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:9,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:8},maxTicksLimit:10}},
-      y:{type:'linear',title:{display:true,text:'Faradaic efficiency (%)',color:TC(),font:{size:9,family:MN}},min:0,max:100,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}}}});
+    scales:{
+      x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:15,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:12},maxTicksLimit:10}},
+      y:{type:'linear',title:{display:true,text:'Faradaic efficiency (%)',color:TC(),font:{size:15,family:MN}},min:0,max:100,grid:{color:GC()},ticks:{color:TC(),font:{size:12}}}
+    }
+  }});
+  
   if(CH.c4b)CH.c4b.destroy();
   CH.c4b=new Chart(document.getElementById('c4b'),{type:'line',data:{datasets:ks.flatMap(k=>[
     {label:`${k} no Δp`,data:js.map(j=>({x:j,y:eeV(k,j,0,g.te)})),borderColor:CATS[k].col+'55',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0},
     {label:`${k} Δp=${g.dp.toFixed(1)}`,data:js.map(j=>({x:j,y:eeV(k,j,g.dp,g.te)})),borderColor:CATS[k].col,borderWidth:2,pointRadius:0,tension:0},
   ])},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:false},tooltip:{callbacks:{label:c2=>c2.dataset.label+': '+c2.parsed.y.toFixed(1)+'%'}}},
-    scales:{x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:9,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:8},maxTicksLimit:10}},
-      y:{type:'linear',title:{display:true,text:'Energy efficiency (%)',color:TC(),font:{size:9,family:MN}},min:0,max:75,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}}}});
+    scales:{
+      x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:15,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:12},maxTicksLimit:10}},
+      y:{type:'linear',title:{display:true,text:'Energy efficiency (%)',color:TC(),font:{size:15,family:MN}},min:0,max:75,grid:{color:GC()},ticks:{color:TC(),font:{size:12}}}
+    }
+  }});
+  
   document.getElementById('p4inf').innerHTML=`At j=${g.j} mA cm⁻², Δp=${g.dp.toFixed(1)} bar. Dashed = no Δp; solid = with Δp.<span class="src">Cu: Dinh et al. Science 2018 | Ag: Gabardo et al. EES 2019 | Bi/Sn: Zheng et al. Nat.Catal. 2019 | α: Cu=0.65, Ag=0.40, Bi/Sn=0.35</span>`;
 }
-
 // ════ P5: Pareto ══════════════════════════════════════════════════
 const PSET = [
   {id:'A',title:'Unmodified commercial GDL',sub:'500 nm pore, θ=100°',th:100,po:500,cost:1.0,col:'#888780',note:'Severely limited DPW — barely non-zero even at low j. Baseline for comparison only.'},
