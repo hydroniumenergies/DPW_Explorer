@@ -739,7 +739,7 @@ function dP3() {
     EE:     {no:j=>eeV(g.cat,j,0,g.te), wd:j=>eeV(g.cat,j,g.dp,g.te),   lbl:'Energy efficiency (%)',           mn:0,  mx:80},
     util:   {no:j=>utV(g.cat,j,0,g.fl,g.te), wd:j=>utV(g.cat,j,g.dp,g.fl,g.te), lbl:'CO₂ utilisation (%)',  mn:0,  mx:100},
     Vcell:  {no:j=>vcV(g.cat,j,0,g.te), wd:j=>vcV(g.cat,j,g.dp,g.te),   lbl:'Cell voltage (V)',                mn:1,  mx:8},
-    Xcarb:  {no:j=>xCarb(j,0,g.te),          wd:j=>xCarb(j,g.dp,g.te),              lbl:'Carbonate fraction X<sub>carb</sub>',       mn:0,  mx:1},
+    Xcarb:  {no:j=>xCarb(j,0,g.te),          wd:j=>xCarb(j,g.dp,g.te),              lbl:'Carbonate fraction X_carb',       mn:0,  mx:1},
     eta_mt: {no:j=>etaMT(j,0,c.ne,g.te)*1000, wd:j=>etaMT(j,g.dp,c.ne,g.te)*1000, lbl:'Mass transport η_mt (mV)', mn:0, mx:50},
   }[out];
   
