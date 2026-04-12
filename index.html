@@ -808,7 +808,7 @@ function dP4() {
   
   document.getElementById('p4inf').innerHTML=`At j=${g.j} mA cm⁻², Δp=${g.dp.toFixed(1)} bar. Dashed = no Δp; solid = with Δp.<span class="src">Cu: Dinh et al. Science 2018 | Ag: Gabardo et al. EES 2019 | Bi/Sn: Zheng et al. Nat.Catal. 2019 | α: Cu=0.65, Ag=0.40, Bi/Sn=0.35</span>`;
 }
-// ════ P5: Pareto ══════════════════════════════════════════════════
+// ════ P5: Pareto (Typography Updated) ═════════════════════════════
 const PSET = [
   {id:'A',title:'Unmodified commercial GDL',sub:'500 nm pore, θ=100°',th:100,po:500,cost:1.0,col:'#888780',note:'Severely limited DPW — barely non-zero even at low j. Baseline for comparison only.'},
   {id:'B',title:'PTFE-gradient MPL',sub:'200 nm pore, θ=115°',th:115,po:200,cost:2.1,col:'#1a5fa8',note:'Moderate DPW. Pragmatic first step compatible with existing manufacturing. DPW closes above 600 mA cm⁻².'},
@@ -833,6 +833,7 @@ function dP5() {
   const pfl2=pflood(sp.th,sp.po), dpm2=dpMin(g.j,g.st,g.te);
   document.getElementById('pins').innerHTML=`<strong>${sp.id}: ${sp.title}</strong> — j=${g.j} mA cm⁻², suppression target=${(g.st*100).toFixed(0)}%<br>
     Δp<sub>min</sub>=${dpm2.toFixed(2)} bar · P<sub>flood</sub>=${pfl2.toFixed(2)} bar · DPW=${Math.max(0,pfl2-dpm2).toFixed(2)} bar · Cost ${sp.cost.toFixed(1)}×<br><br>${sp.note}`;
+  
   if(CH.c5)CH.c5.destroy();
   CH.c5=new Chart(document.getElementById('c5'),{type:'scatter',
     data:{datasets:PSET.map(p=>{const pf=pflood(p.th,p.po),dm=dpMin(g.j,g.st,g.te),dw=Math.max(0,pf-dm);
@@ -840,23 +841,25 @@ function dP5() {
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const p=PSET.find(pp=>pp.id===c.dataset.label);return`${p.title}: DPW=${c.parsed.y.toFixed(1)} bar @ j=${g.j}`;} } } },
       scales:{
-        x:{type:'linear', title:{display:true,text:'Relative cost (×)',color:TC(),font:{size:9,family:MN}},min:0,max:7,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}},
-        y:{type:'linear', title:{display:true,text:`DPW at j=${g.j} mA cm⁻² (bar)`,color:TC(),font:{size:9,family:MN}},min:0,max:20,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}
+        x:{type:'linear', title:{display:true,text:'Relative cost (×)',color:TC(),font:{size:15,family:MN}},min:0,max:7,grid:{color:GC()},ticks:{color:TC(),font:{size:12}}},
+        y:{type:'linear', title:{display:true,text:`DPW at j=${g.j} mA cm⁻² (bar)`,color:TC(),font:{size:15,family:MN}},min:0,max:20,grid:{color:GC()},ticks:{color:TC(),font:{size:12}}}
       },
       onClick(e,els){if(els.length){selP=PSET[els[0].datasetIndex].id;dP5();}}}
   });
+  
   setTimeout(()=>{
     const ch=CH.c5; if(!ch)return;
     const pts=PSET.map(p=>{const pf=pflood(p.th,p.po),dm=dpMin(g.j,g.st,g.te);return{x:p.cost,y:Math.max(0,pf-dm),id:p.id};}).sort((a,b)=>a.x-b.x);
     const c2=ch.ctx,xs=ch.scales.x,ys=ch.scales.y;
     c2.save();c2.setLineDash([4,4]);c2.strokeStyle=DK()?'#555':'#bbb';c2.lineWidth=1;
     c2.beginPath();pts.forEach((pt,i)=>{const px=xs.getPixelForValue(pt.x),py=ys.getPixelForValue(pt.y);i===0?c2.moveTo(px,py):c2.lineTo(px,py);});c2.stroke();
-    c2.setLineDash([]);c2.font=`bold 9px ${MN}`;c2.fillStyle=TC();c2.textAlign='center';
-    pts.forEach(pt=>{c2.fillText(pt.id,xs.getPixelForValue(pt.x),ys.getPixelForValue(pt.y)-11);});
+    c2.setLineDash([]);
+    c2.font=`bold 12px ${MN}`; // Increased font size for point labels
+    c2.fillStyle=TC();c2.textAlign='center';
+    pts.forEach(pt=>{c2.fillText(pt.id,xs.getPixelForValue(pt.x),ys.getPixelForValue(pt.y)-14);}); // Nudged higher
     c2.restore();
   },120);
 }
-
 // ════ Init ════════════════════════════════════════════════════════
 window.addEventListener('load',()=>ua());
 window.addEventListener('resize',()=>setTimeout(()=>[dP0,dP1,dP2,dP3,dP4,dP5][AT](),60));
