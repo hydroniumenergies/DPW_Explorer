@@ -767,7 +767,7 @@ function dP3() {
     <div class="le"><span class="sw" style="border-top:1.5px dashed ${c.col};background:transparent;height:0"></span>Without Δp</div>
     <div class="le"><span class="sw" style="background:${c.col};border-radius:50%"></span>j=${g.j} mA cm⁻²</div>`;
   document.getElementById('p3inf').innerHTML=`<strong>${c.name} — ${c.prod}</strong> at j=${g.j}, Δp=${g.dp.toFixed(1)} bar:<br>
-    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η<sub>util</sub>=${uv2.toFixed(1)}% &nbsp;·&nbsp; V_cell=${vc2.toFixed(2)} V &nbsp;·&nbsp; X<sub>carb</sub>=${xCarb(g.j,g.dp,g.te).toFixed(3)}<br>
+    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η<sub>util</sub>=${uv2.toFixed(1)}% &nbsp;·&nbsp; V<sub>cell</sub>=${vc2.toFixed(2)} V &nbsp;·&nbsp; X<sub>carb</sub>=${xCarb(g.j,g.dp,g.te).toFixed(3)}<br>
     ${c.note}<span class="src">Source: ${c.ref}</span>`;
 }
 
