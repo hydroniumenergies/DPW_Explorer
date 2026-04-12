@@ -726,7 +726,7 @@ function dP2() {
   ctx.restore();
 }
 
-// ════ P3: Performance ═════════════════════════════════════════════
+// ════ P3: Performance (Typography Updated) ════════════════════════
 function dP3() {
   const g = G();
   const out = document.getElementById('P3o').value;
@@ -754,8 +754,8 @@ function dP3() {
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:cc=>cc.dataset.label==='Op'?`${out} at j=${g.j}: ${cc.parsed.y.toFixed(2)}`:cc.dataset.label+': '+cc.parsed.y.toFixed(2)}}},
       scales:{
-        x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:10,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:9},maxTicksLimit:11}},
-        y:{type:'linear',title:{display:true,text:maps.lbl,color:TC(),font:{size:10,family:MN}},min:maps.mn,max:maps.mx,grid:{color:GC()},ticks:{color:TC(),font:{size:9}}}
+        x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:15,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:12},maxTicksLimit:11}},
+        y:{type:'linear',title:{display:true,text:maps.lbl,color:TC(),font:{size:15,family:MN}},min:maps.mn,max:maps.mx,grid:{color:GC()},ticks:{color:TC(),font:{size:12}}}
       }
     }
   });
