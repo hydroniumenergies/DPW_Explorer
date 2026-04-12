@@ -244,8 +244,8 @@ footer a:hover{text-decoration:underline}
   <div class="eq">
     X<sub>carb</sub>(j,Δp) = [CO₃²⁻](j,Δp) / [CO₃²⁻](j,0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B1]</span><br>
     FE(j,Δp) = FE₀(j)·[1 − α·X<sub>carb</sub>] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B2]</span><br>
-    V_cell = E_eq + b·log(j/j₀) + η_OER + η_mt(j,Δp) + j·R_mem(X<sub>carb</sub>) &nbsp;&nbsp;<span class="en">[Eq. B3]</span><br>
-    EE = FE·(ΔG°/n_eF) / V_cell &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B4]</span>
+    V<sub>cell</sub> = E<sub>eq</sub> + b·log(j/j₀) + η<sub>OER</sub> + η<sub>mt</sub>(j,Δp) + j·R_mem(X<sub>carb</sub>) &nbsp;&nbsp;<span class="en">[Eq. B3]</span><br>
+    EE = FE·(ΔG°/η<sub>eF</sub>) / V<sub>cell</sub> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B4]</span>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.7rem">
     <div class="gc" style="flex:1;min-width:160px"><label>Output</label>
@@ -255,7 +255,7 @@ footer a:hover{text-decoration:underline}
         <option value="util">Single-pass CO₂ utilisation (%) ⚠ qualitative</option>
         <option value="Vcell">Cell voltage (V)</option>
         <option value="Xcarb">Carbonate fraction X_carb (0–1)</option>
-        <option value="eta_mt">Mass transport overpotential (mV)</option>
+        <option value="eta<sub>mt</sub>">Mass transport overpotential (mV)</option>
       </select>
     </div>
   </div>
@@ -503,9 +503,9 @@ function ua() {
     <div class="mc"><div class="ml">X<sub>carb</sub></div><div class="mv">${xc.toFixed(3)}</div></div>
     <div class="mc"><div class="ml">FE (${g.cat})</div><div class="mv">${fv.toFixed(1)}<span class="mu">%</span></div></div>
     <div class="mc"><div class="ml">Energy eff.</div><div class="mv">${ev.toFixed(1)}<span class="mu">%</span></div></div>
-    <div class="mc"><div class="ml">V_cell (${g.cat})</div><div class="mv">${vc.toFixed(2)}<span class="mu">V</span></div></div>
+    <div class="mc"><div class="ml">V<sub>cell</sub> (${g.cat})</div><div class="mv">${vc.toFixed(2)}<span class="mu">V</span></div></div>
     <div class="mc"><div class="ml">η<sub>util</sub></div><div class="mv">${uv.toFixed(1)}<span class="mu">%</span></div></div>
-    <div class="mc"><div class="ml">η_mt (mV)</div><div class="mv">${(etaMT(g.j,g.dp,CATS[g.cat].ne,g.te)*1000).toFixed(1)}</div></div>`;
+    <div class="mc"><div class="ml">η<sub>mt</sub> (mV)</div><div class="mv">${(etaMT(g.j,g.dp,CATS[g.cat].ne,g.te)*1000).toFixed(1)}</div></div>`;
 
   [dP0,dP1,dP2,dP3,dP4,dP5][AT]();
 }
@@ -740,7 +740,7 @@ function dP3() {
     util:   {no:j=>utV(g.cat,j,0,g.fl,g.te), wd:j=>utV(g.cat,j,g.dp,g.fl,g.te), lbl:'CO₂ utilisation (%)',  mn:0,  mx:100},
     Vcell:  {no:j=>vcV(g.cat,j,0,g.te), wd:j=>vcV(g.cat,j,g.dp,g.te),   lbl:'Cell voltage (V)',                mn:1,  mx:8},
     Xcarb:  {no:j=>xCarb(j,0,g.te),          wd:j=>xCarb(j,g.dp,g.te),              lbl:'Carbonate fraction X_carb',       mn:0,  mx:1},
-    eta_mt: {no:j=>etaMT(j,0,c.ne,g.te)*1000, wd:j=>etaMT(j,g.dp,c.ne,g.te)*1000, lbl:'Mass transport η_mt (mV)', mn:0, mx:50},
+    eta<sub>mt</sub>: {no:j=>etaMT(j,0,c.ne,g.te)*1000, wd:j=>etaMT(j,g.dp,c.ne,g.te)*1000, lbl:'Mass transport η<sub>mt</sub> (mV)', mn:0, mx:50},
   }[out];
   
   const noData = js.map(j => ({ x: j, y: maps.no(j) }));
@@ -767,7 +767,7 @@ function dP3() {
     <div class="le"><span class="sw" style="border-top:1.5px dashed ${c.col};background:transparent;height:0"></span>Without Δp</div>
     <div class="le"><span class="sw" style="background:${c.col};border-radius:50%"></span>j=${g.j} mA cm⁻²</div>`;
   document.getElementById('p3inf').innerHTML=`<strong>${c.name} — ${c.prod}</strong> at j=${g.j}, Δp=${g.dp.toFixed(1)} bar:<br>
-    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η<sub>util</sub>=${uv2.toFixed(1)}% &nbsp;·&nbsp; V_cell=${vc2.toFixed(2)} V &nbsp;·&nbsp; X<sub>carb</sub>=${xCarb(g.j,g.dp,g.te).toFixed(3)}<br>
+    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η<sub>util</sub>=${uv2.toFixed(1)}% &nbsp;·&nbsp; V<sub>cell</sub>=${vc2.toFixed(2)} V &nbsp;·&nbsp; X<sub>carb</sub>=${xCarb(g.j,g.dp,g.te).toFixed(3)}<br>
     ${c.note}<span class="src">Source: ${c.ref}</span>`;
 }
 
@@ -927,7 +927,7 @@ function exportCSV(canvasId) {
     });
   } else {
     const cat = document.getElementById('Gcat').value;
-    headers = ['j_mA_cm2','xCarb','FE_pct','EE_pct','Vcell_V','util_pct','eta_mt_mV'];
+    headers = ['j_mA_cm2','xCarb','FE_pct','EE_pct','Vcell_V','util_pct','eta<sub>mt</sub>_mV'];
     rows = j_arr.map(j => [
       j, xCarb(j,g.dp,g.te).toFixed(4),
       feV(cat,j,g.dp,g.te).toFixed(2),
