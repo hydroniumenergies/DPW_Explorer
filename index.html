@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Differential Pressure Window Explorer v3.1 — CO₂ Electrolyser Design</title>
+<title>Differential Pressure Window Explorer v3.4 — CO₂ Electrolyser Design</title>
 <meta name="description" content="Physically validated interactive model for differential pressure CO₂ electrolyser design. Carbonate suppression via CO₂/OH⁻ competition at cathode interface. 50–1000 mA cm⁻².">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -128,11 +128,11 @@ footer a:hover{text-decoration:underline}
 .export-bar{display:flex;gap:6px;justify-content:flex-end;margin-bottom:4px}
 .exp-btn{
   font-family:var(--mn);font-size:10px;padding:4px 10px;
-  border-radius:4px;border:1px solid var(--brd);
+  border-radius:4px;border:1px solid var(--bd);
   background:var(--sf);color:var(--mt);cursor:pointer;
   transition:background .12s,color .12s;
 }
-.exp-btn:hover{background:var(--blu);color:#fff;border-color:var(--blu)}
+.exp-btn:hover{background:var(--bl);color:#fff;border-color:var(--bl)}
 
 </style>
 </head>
@@ -142,10 +142,10 @@ footer a:hover{text-decoration:underline}
   <div class="bdg">Supplementary Interactive Figure</div>
   <h1>Differential Pressure Engineering as a Primary Strategy to Mitigate Carbonate Formation in CO₂ Electrolysers</h1>
   <p class="byl"><strong>Sankeerthana Bellamkonda, Karthik Seemakurthy</strong> &nbsp;·&nbsp; Hydronium Energies Ltd., Meadowbank Gardens, Cranford, London TW5 9TU, UK<br></p>
-  <p class="abs">v3.1 corrects a unit error in the membrane potential calculation that caused DPW to always read zero. The suppression mechanism is the CO₂/OH⁻ competition at the cathode interface. Δp<sub>min</sub> is defined as the pressure achieving 50% carbonate suppression at the interface — physically grounded in preventing GDL salt precipitation, not requiring complete elimination of crossover flux. All eight global sliders update all six panels live. Range: 50–1000 mA cm⁻².</p>
+  <p class="abs">v3.4 enforces rigid linear axes and <code>{x,y}</code> Cartesian mapping to fix boundary overflow bugs. The suppression mechanism is the CO₂/OH⁻ competition at the cathode interface. Δp<sub>min</sub> is defined as the pressure achieving 50% carbonate suppression at the interface — physically grounded in preventing GDL salt precipitation. Range: 50–1000 mA cm⁻².</p>
   <div class="pills">
     <span class="pill a">Δp<sub>min</sub> = 50% carbonate suppression criterion</span>
-    <span class="dpill g" title="Δp<sub>min</sub> solved by 52-step bisection over [0, 20] bar — precision &lt;0.001 bar, ~0.1 ms per call. All 6 panels update synchronously on every slider event. No server — all physics runs locally in your browser.">⚡ In-browser solver · 52-step bisection</span>
+    <span class="pill g" title="Δp<sub>min</sub> solved by 52-step bisection over [0, 20] bar — precision &lt;0.001 bar, ~0.1 ms per call. All 6 panels update synchronously on every slider event. No server — all physics runs locally in your browser.">⚡ In-browser solver · 52-step bisection</span>
   </div>
 </div>
 </header>
@@ -157,11 +157,11 @@ footer a:hover{text-decoration:underline}
   <div class="gbt">Operating conditions &amp; electrode architecture</div>
   <div class="gcs">
     <div class="gc"><label title="j — electrochemical current per unit electrode area (mA cm⁻²). Industrial target: ≥300 mA cm⁻². Model range: 50–1000 mA cm⁻²." style="cursor:help;border-bottom:1px dotted var(--mt)">Current density j ℹ</label><div class="gcr"><input type="range" id="Gj" min="50" max="1000" value="300" step="10" oninput="ua()"><span class="gv" id="Vj">300 mA cm⁻²</span></div></div>
-    <div class="gc"><label title="Δp = p_cathode − p_anode (bar). The engineering lever of this work. Must exceed Δp<sub>min</sub> to suppress carbonate; must stay below P<sub>flood</sub> to prevent GDL flooding." style="cursor:help;border-bottom:1px dotted var(--mt)">Differential pressure Δp ℹ</label><div class="gcr"><input type="range" id="Gdp" min="0" max="15" value="2.0" step="0.1" oninput="ua()"><span class="gv" id="Vdp">2.0 bar</span></div></div>
+    <div class="gc"><label title="Δp = p_cathode − p_anode (bar). The engineering lever of this work. Must exceed Δp<sub>min</sub> to suppress carbonate; must stay below P<sub>flood</sub> to prevent GDL flooding." style="cursor:help;border-bottom:1px dotted var(--mt)">Differential pressure Δp ℹ</label><div class="gcr"><input type="range" id="Gdp" min="0" max="15" value="4.0" step="0.1" oninput="ua()"><span class="gv" id="Vdp">4.0 bar</span></div></div>
     <div class="gc"><label title="f<sub>targ</sub> — the fraction of ambient-pressure [CO₃²⁻] that is acceptable at the cathode interface. 50% = keep ≤50% of baseline carbonate. Lower = stricter = higher Δp<sub>min</sub> required." style="cursor:help;border-bottom:1px dotted var(--mt)">Suppression target (% of baseline) ℹ</label><div class="gcr"><input type="range" id="Gst" min="10" max="80" value="50" step="5" oninput="ua()"><span class="gv" id="Vst">50%</span></div></div>
-    <div class="gc"><label title="θ — effective water contact angle of the MPL surface (degrees). Determined by PTFE or fluorosilane loading. θ>90° = hydrophobic. Sets the P<sub>flood</sub> ceiling via Young–Laplace: P<sub>flood</sub> = 4γ|cosθ|/d_pore." style="cursor:help;border-bottom:1px dotted var(--mt)">GDL contact angle θ ℹ</label><div class="gcr"><input type="range" id="Gth" min="90" max="155" value="150" step="1" oninput="ua()"><span class="gv" id="Vth">150°</span></div></div>
+    <div class="gc"><label title="θ — effective water contact angle of the MPL surface (degrees). Determined by PTFE or fluorosilane loading. θ>90° = hydrophobic. Sets the P<sub>flood</sub> ceiling via Young–Laplace." style="cursor:help;border-bottom:1px dotted var(--mt)">GDL contact angle θ ℹ</label><div class="gcr"><input type="range" id="Gth" min="90" max="155" value="150" step="1" oninput="ua()"><span class="gv" id="Vth">150°</span></div></div>
     <div class="gc"><label title="d_pore — target minimum pore diameter of the microporous layer (nm). Smaller pores = higher P<sub>flood</sub> = wider DPW ceiling. Commercial GDL: ~300–500 nm. Engineered MPL: 50–200 nm." style="cursor:help;border-bottom:1px dotted var(--mt)">MPL pore diameter ℹ</label><div class="gcr"><input type="range" id="Gpo" min="50" max="800" value="100" step="10" oninput="ua()"><span class="gv" id="Vpo">100 nm</span></div></div>
-    <div class="gc"><label title="δ — AEM membrane thickness (µm). Does not affect Δp<sub>min</sub> in v3.1 (suppression is interface-controlled). Affects cell voltage via ohmic resistance. Typical: 20–80 µm." style="cursor:help;border-bottom:1px dotted var(--mt)">Membrane thickness δ ℹ</label><div class="gcr"><input type="range" id="Gde" min="20" max="100" value="50" step="5" oninput="ua()"><span class="gv" id="Vde">50 µm</span></div></div>
+    <div class="gc"><label title="δ — AEM membrane thickness (µm). Does not affect Δp<sub>min</sub> in v3.2 (suppression is interface-controlled). Affects cell voltage via ohmic resistance. Typical: 20–80 µm." style="cursor:help;border-bottom:1px dotted var(--mt)">Membrane thickness δ ℹ</label><div class="gcr"><input type="range" id="Gde" min="20" max="100" value="50" step="5" oninput="ua()"><span class="gv" id="Vde">50 µm</span></div></div>
     <div class="gc"><label title="φ_CO₂ — volumetric CO₂ feed flow rate per cm² electrode area. Sets single-pass utilisation η<sub>util</sub>. Lower flow = higher utilisation but risks CO₂ starvation at high j." style="cursor:help;border-bottom:1px dotted var(--mt)">CO₂ feed flow (mL min⁻¹ cm⁻²) ℹ</label><div class="gcr"><input type="range" id="Gfl" min="1" max="50" value="10" step="1" oninput="ua()"><span class="gv" id="Vfl">10 mL/min/cm²</span></div></div>
     <div class="gc"><label title="T — operating temperature (°C). Affects KH(T) and Ka1,Ka2(T) via Plummer & Busenberg (1982). Higher T reduces CO₂ solubility → higher Δp<sub>min</sub>. At 80°C, Δp<sub>min</sub> nearly triples vs 25°C." style="cursor:help;border-bottom:1px dotted var(--mt)">Temperature T ℹ</label><div class="gcr"><input type="range" id="Gte" min="20" max="80" value="25" step="5" oninput="ua()"><span class="gv" id="Vte">25°C</span></div></div>
     <div class="gc"><label>Catalyst system</label>
@@ -175,7 +175,7 @@ footer a:hover{text-decoration:underline}
 </div>
 
 <div class="note-bar" id="notebar" title="Δp<sub>min</sub> is from a physically-grounded model. Key semi-empirical parameter: α_c=2.5 (CO₂/OH⁻ competition coefficient, calibrated to pH 7–9 operating regime, uncertainty ±30–40%). See Supporting Information §S4.2.">
-  <strong>Model note:</strong> Δp<sub>min</sub> is the pressure at which interfacial [CO₃²⁻] reaches the suppression target (slider above). At the default 200 nm pore, DPW is non-zero from low j. Increasing pore size narrows the window; decreasing it widens it substantially. The suppression target slider lets you explore different engineering acceptance criteria.
+  <strong>Model note:</strong> Δp<sub>min</sub> is the pressure at which interfacial [CO₃²⁻] reaches the suppression target. Increasing pore size narrows the window; decreasing it widens it substantially.
 </div>
 
 <div class="mg" id="lm"></div>
@@ -189,25 +189,23 @@ footer a:hover{text-decoration:underline}
   <button class="tb" onclick="st(5)"><span class="tn">06</span>Pareto</button>
 </div>
 
-<!-- ═══ PANEL 0 ═══ -->
 <div class="pnl on" id="p0">
   <div class="eq">
-    [CO₃²⁻]_interface(j,Δp) = [CO₃²⁻]_bulk · 1/(1 + 2.5·[CO₂(aq)]/[OH⁻]_local) &nbsp;<span class="en">[Eq. A1]</span><br>
+    [CO₃²⁻]_interface(j,Δp,T) = [CO₃²⁻]_bulk · 1/(1 + 2.5·[CO₂(aq)]/[OH⁻]_local) &nbsp;<span class="en">[Eq. A1]</span><br>
     Δp<sub>min</sub>: solve [CO₃²⁻]_interface = target × [CO₃²⁻]_interface(Δp=0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A2]</span><br>
     P<sub>flood</sub> = 4γ|cosθ| / d_pore &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. A3]</span>
   </div>
   <div class="export-bar"><button class="exp-btn" onclick="exportPNG('c0','DPW_Map')" title="Download this chart as a high-resolution PNG">⬇ PNG</button><button class="exp-btn" onclick="exportCSV('c0')" title="Download the chart data as a CSV file">⬇ CSV</button></div>
     <div class="cw" style="height:285px"><canvas id="c0"></canvas></div>
   <div class="lr">
-    <div class="le"><span class="sw" style="background:var(--bl)"></span>Δp<sub>min</sub>(j) — suppression threshold</div>
-    <div class="le"><span class="sw" style="border-top:1.5px dashed var(--rd);background:transparent;height:0"></span>P<sub>flood</sub> limit</div>
-    <div class="le"><span class="sw" style="background:var(--bl);opacity:.1;height:9px;border-radius:2px"></span>Stable DPW</div>
-    <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Operating point (j, Δp sliders)</div>
+    <div class="le"><span class="sw" style="background:rgba(26,95,168,0.3); border-bottom:2px dashed #1a5fa8"></span>Flooding Risk (Δp > P<sub>flood</sub>)</div>
+    <div class="le"><span class="sw" style="background:rgba(26,122,82,0.3)"></span>Safe Operating DPW</div>
+    <div class="le"><span class="sw" style="background:rgba(184,50,50,0.3); border-top:2px solid #b83232"></span>Carbonate Risk (Δp < Δp<sub>min</sub>)</div>
+    <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Operating Point</div>
   </div>
-  <div class="info"><strong>Why this now works:</strong> Carbonate crossover flux can never be driven to zero by pressure alone — it is dominated by electromigration. Instead, Δp<sub>min</sub> is correctly defined as the pressure that suppresses interfacial [CO₃²⁻] to a chosen fraction of its ambient value (the suppression target slider), preventing GDL pore precipitation. The pore diameter slider controls P<sub>flood</sub> (ceiling). Smaller pores = higher ceiling = wider window.</div>
+  <div class="info"><strong>Visual Validation (v3.4):</strong> The chart axes are now explicitly constrained to linear numeric bounds (50-1000). The Safe Operating Window (Green) is wedged between the GDL Capillary Flooding Limit (Blue region) and the Thermodynamic Crossover Limit (Red region).</div>
 </div>
 
-<!-- ═══ PANEL 1 ═══ -->
 <div class="pnl" id="p1">
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:.7rem">
     <div class="gc" style="flex:1;min-width:140px"><label>Rotate view</label><div class="gcr"><input type="range" id="P1r" min="0" max="360" value="30" step="1" oninput="dP1()"><span class="gv" id="P1rv">30°</span></div></div>
@@ -227,10 +225,9 @@ footer a:hover{text-decoration:underline}
     <div class="le"><span class="sw" style="background:var(--rd)"></span>Failure zone</div>
     <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Operating point</div>
   </div>
-  <div class="info">The 3D surface now shows genuine operating margins. The optimistic scenario (50 nm pore, θ=138°) gives a wide, flat green plateau across the full j range — this is the target architecture. The conservative scenario shows DPW collapsing to zero above ~300 mA cm⁻².</div>
+  <div class="info">The 3D surface shows genuine operating margins. The optimistic scenario (50 nm pore, θ=138°) gives a wide, flat green plateau across the full j range — this is the target architecture. The conservative scenario shows DPW collapsing to zero above ~300 mA cm⁻².</div>
 </div>
 
-<!-- ═══ PANEL 2 ═══ -->
 <div class="pnl" id="p2">
   <div class="export-bar"><button class="exp-btn" onclick="exportPNG('c2','Risk_Heatmap')" title="Download this chart as a high-resolution PNG">⬇ PNG</button><button class="exp-btn" onclick="exportCSV('c2')" title="Download the chart data as a CSV file">⬇ CSV</button></div>
     <div class="cw" style="height:315px"><canvas id="c2"></canvas></div>
@@ -240,10 +237,9 @@ footer a:hover{text-decoration:underline}
     <div class="le"><span class="sw" style="background:var(--bl)"></span>GDL flooding / membrane rupture (Δp too high)</div>
     <div class="le"><span class="sw" style="background:var(--am);border-radius:50%"></span>Current (j, Δp) operating point</div>
   </div>
-  <div class="info">The risk map shows the correct physics: the carbonate risk zone (red) expands rightward as j increases, because Δp<sub>min</sub> rises with j (more OH⁻ produced → more CO₂ needed to suppress it). The flooding zone (blue) is fixed by GDL architecture. Changing pore size or contact angle shifts the blue boundary; changing j or suppression target shifts the red boundary.</div>
+  <div class="info">The risk map correctly renders the failure gradients pixel-by-pixel. The carbonate risk zone (red) expands rightward as j increases, because Δp<sub>min</sub> rises with j (more OH⁻ produced → more CO₂ needed to suppress it). The flooding zone (blue) is fixed by GDL architecture. If the red and blue zones overlap, the window is closed and renders in purplish-grey.</div>
 </div>
 
-<!-- ═══ PANEL 3 ═══ -->
 <div class="pnl" id="p3">
   <div class="eq">
     X<sub>carb</sub>(j,Δp) = [CO₃²⁻](j,Δp) / [CO₃²⁻](j,0) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="en">[Eq. B1]</span><br>
@@ -271,7 +267,6 @@ footer a:hover{text-decoration:underline}
   <div class="info" id="p3inf"></div>
 </div>
 
-<!-- ═══ PANEL 4 ═══ -->
 <div class="pnl" id="p4">
   <div class="ccg" id="ccs"></div>
   <div class="export-bar"><button class="exp-btn" onclick="exportPNG('c4a','Catalyst_FE')" title="Download this chart as a high-resolution PNG">⬇ PNG</button><button class="exp-btn" onclick="exportCSV('c4a')" title="Download the chart data as a CSV file">⬇ CSV</button></div>
@@ -288,7 +283,6 @@ footer a:hover{text-decoration:underline}
   <div class="info" id="p4inf"></div>
 </div>
 
-<!-- ═══ PANEL 5 ═══ -->
 <div class="pnl" id="p5">
   <p style="font-size:11px;color:var(--mt);font-family:var(--sr);margin-bottom:.7rem">DPW width updates live with j and suppression target sliders. Each architecture has its own pore size and contact angle.</p>
   <div class="pg" id="pgrd"></div>
@@ -299,23 +293,35 @@ footer a:hover{text-decoration:underline}
 </main>
 
 <footer>
-  <span>Supplementary Figure S1 v3.1 · <em>Perspectives in Energy &amp; Electrochemistry</em>, 2026</span>
-  <span>CO₂/OH⁻ competition model · Butler–Volmer + GDE MT · j: 50–1000 mA cm⁻² · <a href="https://github.com/YOUR-USERNAME/dpw-explorer">GitHub</a></span>
-  <span>No server · All physics in browser · Dark mode · v3.1 fixes DPW=0 bug</span>
+  <span>Supplementary Figure S1 v3.4 · <em>Perspectives in Energy &amp; Electrochemistry</em>, 2026</span>
+  <span>Thermodynamic CO₂/OH⁻ model · Butler–Volmer + GDE MT · j: 50–1000 mA cm⁻² · <a href="https://github.com/YOUR-USERNAME/dpw-explorer">GitHub</a></span>
+  <span>No server · All physics in browser · Dark mode supported</span>
 </footer>
 
 <script>
 'use strict';
 // ════════════════════════════════════════════════════════════
-// PHYSICAL CONSTANTS
+// PHYSICAL CONSTANTS & THERMODYNAMICS
 // ════════════════════════════════════════════════════════════
-const F=96485,R=8.314,mu=1e-3,gam=0.072;
-const Ka1=4.47e-7,Ka2=4.68e-11,KH=0.034;  // mol/L/atm
+const F=96485,R=8.314,gam=0.072;
 const D_OH=5.3e-9,dL=50e-6;               // OH⁻ diffusivity, boundary layer
 const D_CO2=1.6e-5,L_GDL=200e-6,L_MPL=30e-6;
 const D_GDL=D_CO2*Math.pow(0.70,1.5)/1.5;
 const D_MPL=D_CO2*Math.pow(0.30,1.5)/2.5;
 const R_gas=L_GDL/D_GDL + L_MPL/D_MPL;
+
+/**
+ * Validated Thermodynamic Constants via Plummer & Busenberg (1982) & van't Hoff
+ */
+function getK(T_C) {
+  const T = T_C + 273.15;
+  // Acid dissociation constants Ka1, Ka2
+  const pK1 = 356.309 + 0.0609 * T - 21834.4 / T - 126.834 * Math.log10(T) + 1.685e6 / (T * T);
+  const pK2 = 107.887 + 0.0325 * T - 5151.8 / T - 38.926 * Math.log10(T) + 5.637e5 / (T * T);
+  // Henry's Law Constant KH (mol/L/atm)
+  const KH_T = 0.034 * Math.exp(2400 * (1/T - 1/298.15));
+  return { Ka1: Math.pow(10, -pK1), Ka2: Math.pow(10, -pK2), KH: KH_T };
+}
 
 // ════════════════════════════════════════════════════════════
 // CORE PHYSICS
@@ -323,17 +329,17 @@ const R_gas=L_GDL/D_GDL + L_MPL/D_MPL;
 
 /**
  * Interfacial carbonate concentration via CO₂/OH⁻ competition (Eq. A1).
- * Physically: elevated p_CO₂ increases [CO₂(aq)], competes with OH⁻
- * for the carbonate-forming pathway, suppressing [CO₃²⁻] at interface.
  */
-function co3Interface(j_mA, dp_bar) {
+function co3Interface(j_mA, dp_bar, T_C) {
+  const { Ka1, Ka2, KH } = getK(T_C);
   const jA = j_mA * 10;                        // A/m²
   const p  = 1.0 + dp_bar / 1.01325;           // atm
   const co2_aq = KH * p * 1000;                // mol/m³
   const OH_flux = jA / (2 * F);                // mol/m²/s
   const OH_loc  = OH_flux * dL / D_OH + 1e-6 * 1e3; // mol/m³
   const ratio   = co2_aq / Math.max(OH_loc, 1e-8);
-  const f_supp  = 1 / (1 + 2.5 * ratio);
+  const f_supp  = 1 / (1 + 2.5 * ratio);       // alpha_c = 2.5
+  
   // Bulk carbonate at pH 8, 1 atm reference
   const H    = 1e-8 * 1e3;                     // mol/m³
   const co2L = KH * 1.0;                       // mol/L at 1 atm
@@ -343,27 +349,25 @@ function co3Interface(j_mA, dp_bar) {
 }
 
 /**
- * Carbonate suppression fraction X<sub>carb</sub> (Eq. B1).
- * X<sub>carb</sub> = 1 at Δp=0 (no suppression), → 0 as Δp → ∞.
+ * Carbonate suppression fraction X_carb (Eq. B1).
  */
-function xCarb(j_mA, dp_bar) {
-  const c0 = co3Interface(j_mA, 0);
+function xCarb(j_mA, dp_bar, T_C) {
+  const c0 = co3Interface(j_mA, 0, T_C);
   if (c0 <= 0) return 0;
-  return Math.min(1, co3Interface(j_mA, dp_bar) / c0);
+  return Math.min(1, co3Interface(j_mA, dp_bar, T_C) / c0);
 }
 
 /**
- * Δp<sub>min</sub>: pressure where X<sub>carb</sub> falls to (suppTarget/100).
- * suppTarget is a percentage kept (e.g. 50 = keep 50% = suppress 50%).
+ * Δp_min: pressure where X_carb falls to (suppTarget/100).
  */
-function dpMin(j_mA, suppFrac) {
-  const c0  = co3Interface(j_mA, 0);
+function dpMin(j_mA, suppFrac, T_C) {
+  const c0  = co3Interface(j_mA, 0, T_C);
   const tgt = c0 * suppFrac;
-  if (co3Interface(j_mA, 20) >= tgt) return 20;
+  if (co3Interface(j_mA, 20, T_C) >= tgt) return 20;
   let lo = 0, hi = 20;
   for (let i = 0; i < 52; i++) {
     const mid = (lo + hi) / 2;
-    if (co3Interface(j_mA, mid) > tgt) lo = mid; else hi = mid;
+    if (co3Interface(j_mA, mid, T_C) > tgt) lo = mid; else hi = mid;
     if (hi - lo < 0.001) break;
   }
   return (lo + hi) / 2;
@@ -421,17 +425,17 @@ function fe0(cat, j) {
     }
   }
 }
-function feV(cat, j, dp)          { return Math.max(2, fe0(cat,j)*(1 - CATS[cat].alpha*xCarb(j,dp))); }
+function feV(cat, j, dp, T)       { return Math.max(2, fe0(cat,j)*(1 - CATS[cat].alpha*xCarb(j,dp,T))); }
 function vcV(cat, j, dp, T) {
   const c = CATS[cat];
   const ec = c.b * Math.log10(Math.max(1e-9, j/1000) / c.j0);
   const ea = 0.042 * Math.log10(Math.max(1e-9, j/1000) / 0.01) + 0.40;
   const em = etaMT(j, dp, c.ne, T);
-  const xc = xCarb(j, dp);
-  const Rm = 0.28 + 0.005 * xc * 100;
+  const xc = xCarb(j, dp, T);
+  const Rm = 0.28 + 0.5 * xc; // Beta = 0.5
   return Math.abs(c.dG) + Math.abs(ec) + Math.abs(ea) + em + (j/1000)*Rm;
 }
-function eeV(cat, j, dp, T)       { return Math.min(99, (feV(cat,j,dp)/100)*CATS[cat].dG/vcV(cat,j,dp,T)*100); }
+function eeV(cat, j, dp, T)       { return Math.min(99, (feV(cat,j,dp,T)/100)*CATS[cat].dG/vcV(cat,j,dp,T)*100); }
 function utV(cat, j, dp, fl, T)   { const phi=(fl/1000/60)/22.4e-3; return Math.min(99,(j/1000*CATS[cat].ne)/(2*F)/phi*100 + Math.min(20,dp*2)); }
 
 // ════════════════════════════════════════════════════════════
@@ -473,11 +477,11 @@ function ua() {
   document.getElementById('Vfl').textContent = g.fl + ' mL/min/cm²';
   document.getElementById('Vte').textContent = g.te + '°C';
 
-  const dpm = dpMin(g.j, g.st);
+  const dpm = dpMin(g.j, g.st, g.te);
   const pfl = pflood(g.th, g.po);
   const dpw = Math.max(0, pfl - dpm);
-  const xc  = xCarb(g.j, g.dp);
-  const fv  = feV(g.cat, g.j, g.dp);
+  const xc  = xCarb(g.j, g.dp, g.te);
+  const fv  = feV(g.cat, g.j, g.dp, g.te);
   const ev  = eeV(g.cat, g.j, g.dp, g.te);
   const uv  = utV(g.cat, g.j, g.dp, g.fl, g.te);
   const vc  = vcV(g.cat, g.j, g.dp, g.te);
@@ -485,12 +489,11 @@ function ua() {
   const sc  = ok ? 'var(--gn)' : 'var(--rd)';
   const ss  = ok ? '✓ Stable' : g.dp < dpm ? '✗ Precipitation' : '✗ Flooding';
 
-  // Update note bar based on DPW
   const nb = document.getElementById('notebar');
   if (dpw <= 0) {
-    nb.innerHTML = `<strong>DPW is zero</strong> at current settings: P<sub>flood</sub> (${pfl.toFixed(2)} bar) ≤ Δp<sub>min</sub> (${dpm.toFixed(2)} bar). Try: decrease pore diameter, increase contact angle, or reduce the suppression target slider (less strict criterion).`;
+    nb.innerHTML = `<strong>DPW is zero</strong> at current settings: P<sub>flood</sub> (${pfl.toFixed(2)} bar) ≤ Δp<sub>min</sub> (${dpm.toFixed(2)} bar). Try: decrease pore diameter, increase contact angle, or reduce the suppression target slider.`;
   } else {
-    nb.innerHTML = `<strong>DPW = ${dpw.toFixed(2)} bar</strong> at j=${g.j} mA cm⁻². Operating point (Δp=${g.dp.toFixed(1)} bar) is ${ok?'inside ✓ the DPW':'outside ✗ the DPW'}. Suppression criterion: reduce [CO₃²⁻] to ≤${(g.st*100).toFixed(0)}% of ambient value.`;
+    nb.innerHTML = `<strong>DPW = ${dpw.toFixed(2)} bar</strong> at j=${g.j} mA cm⁻². Operating point (Δp=${g.dp.toFixed(1)} bar) is ${ok?'inside ✓ the DPW':'outside ✗ the DPW'}.`;
   }
 
   document.getElementById('lm').innerHTML = `
@@ -508,24 +511,33 @@ function ua() {
   [dP0,dP1,dP2,dP3,dP4,dP5][AT]();
 }
 
-// ════ P0: DPW map ═════════════════════════════════════════════════
+// ════ P0: DPW map (Synchronized Axes) ═════════════════════════════
 function dP0() {
   const g = G();
   const js = []; for (let j=50; j<=1000; j+=20) js.push(j);
-  const dpm = js.map(j => dpMin(j, g.st));
+  
   const pfl = pflood(g.th, g.po);
+  const dpmData = js.map(j => ({ x: j, y: dpMin(j, g.st, g.te) }));
+  const pflData = js.map(j => ({ x: j, y: pfl }));
+  
+  // Synchronized Dynamic Maximum
+  const yMax = Math.max(pfl * 1.15, g.dp * 1.2, 15); 
+  
   if (CH.c0) CH.c0.destroy();
   CH.c0 = new Chart(document.getElementById('c0'), { type:'line',
-    data: { labels: js, datasets: [
-      { label:'Δp<sub>min</sub>', data:dpm, borderColor:'#1a5fa8', backgroundColor:'rgba(26,95,168,.08)', fill:'+1', tension:.35, pointRadius:0, borderWidth:2 },
-      { label:'P<sub>flood</sub>', data:js.map(()=>pfl), borderColor:'#b83232', borderDash:[6,3], fill:false, pointRadius:0, borderWidth:1.5 },
-      { label:'Op', type:'scatter', data:[{x:g.j, y:g.dp}], backgroundColor:'#a05c12', pointRadius:9, showLine:false },
+    data: { datasets: [
+      { label:'Flooding Risk', data:pflData, borderColor:'transparent', backgroundColor:'rgba(26,95,168,0.15)', fill:'end', pointRadius:0, borderWidth:0 },
+      { label:'Safe DPW', data:pflData, borderColor:'transparent', backgroundColor:'rgba(26,122,82,0.18)', fill:'+1', pointRadius:0, borderWidth:0 },
+      { label:'Carbonate Risk', data:dpmData, borderColor:'transparent', backgroundColor:'rgba(184,50,50,0.15)', fill:'origin', pointRadius:0, borderWidth:0 },
+      { label:'P_flood Limit', data:pflData, borderColor:'#1a5fa8', borderDash:[6,3], fill:false, pointRadius:0, borderWidth:2 },
+      { label:'Δp_min Threshold', data:dpmData, borderColor:'#b83232', fill:false, tension:0, pointRadius:0, borderWidth:2 },
+      { label:'Op', type:'scatter', data:[{x:g.j, y:g.dp}], backgroundColor:'#a05c12', borderColor:'#fff', borderWidth:2, pointRadius:8, showLine:false },
     ]},
     options: { responsive:true, maintainAspectRatio:false,
       plugins: { legend:{display:false}, tooltip:{callbacks:{label:c => c.dataset.label==='Op' ? `j=${g.j} mA, Δp=${g.dp.toFixed(1)} bar` : c.dataset.label+': '+c.parsed.y.toFixed(2)+' bar'}} },
       scales: {
-        x: { title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:15,family:MN}}, grid:{color:GC()}, ticks:{color:TC(),font:{size:12},maxTicksLimit:11} },
-        y: { title:{display:true,text:'Δp (bar)',color:TC(),font:{size:15,family:MN}}, min:0, max:Math.max(pfl*1.3, g.dp*1.2, 3), grid:{color:GC()}, ticks:{color:TC(),font:{size:12}} }
+        x: { type: 'linear', min: 50, max: 1000, title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:15,family:MN}}, grid:{color:GC()}, ticks:{color:TC(),font:{size:12},maxTicksLimit:11} },
+        y: { type: 'linear', min: 0, max: yMax, title:{display:true,text:'Δp (bar)',color:TC(),font:{size:15,family:MN}}, grid:{color:GC()}, ticks:{color:TC(),font:{size:12}} }
       }
     }
   });
@@ -546,7 +558,7 @@ function dP1() {
   const ctx = cv.getContext('2d'); ctx.scale(devicePixelRatio,devicePixelRatio); ctx.clearRect(0,0,W,H);
   const NJ=22, NP=22, jMn=50, jMx=1000;
   const r = rot*Math.PI/180, cx2=W/2, cy2=H*.54, sx=150, sy=72, sz=92;
-  function mg2(j,dp){ const d=dpMin(j,g.st); if(dp<d||dp>pfl)return -1; return Math.min(dp-d,pfl-dp); }
+  function mg2(j,dp){ const d=dpMin(j,g.st,g.te); if(dp<d||dp>pfl)return -1; return Math.min(dp-d,pfl-dp); }
   function pr2(xi,yi,zi){ const x=xi*Math.cos(r)+yi*Math.sin(r),y=-xi*Math.sin(r)+yi*Math.cos(r); return[cx2+x*sx,cy2-y*sy-zi*sz]; }
   function mc(m){ if(m<0)return DK()?'#3a1212':'#f09090'; if(m<.4)return DK()?'#3a2808':'#e8a040'; if(m<1.2)return DK()?'#0d2a10':'#5aaa70'; return DK()?'#0a3822':'#1a9a60'; }
   const cells = [];
@@ -587,56 +599,110 @@ function dP1() {
   ctx.fillText('DPW margin',vx,vy-7);
 }
 
-// ════ P2: Risk heatmap ════════════════════════════════════════════
+// ════ P2: Risk heatmap (Synchronized Axes) ════════════════════════
 function dP2() {
   const g = G();
-  const cv=document.getElementById('c2');
-  const W=cv.parentElement.clientWidth, H=315;
-  cv.width=W*devicePixelRatio; cv.height=H*devicePixelRatio;
-  cv.style.width=W+'px'; cv.style.height=H+'px';
-  const ctx=cv.getContext('2d'); ctx.scale(devicePixelRatio,devicePixelRatio); ctx.clearRect(0,0,W,H);
-  const pL=50,pR=18,pT=18,pB=34,pw=W-pL-pR,ph=H-pT-pB;
-  const jMn=50,jMx=1000,dpMx=12;
-  const pfl=pflood(g.th,g.po);
-  const dk=DK();
-  const img=ctx.createImageData(Math.floor(pw),Math.floor(ph));
-  const step=2;
-  for(let xi=0;xi<pw;xi+=step){
-    const j=jMn+xi/pw*(jMx-jMn);
-    const dpm2=dpMin(j,g.st);
-    for(let yi=0;yi<ph;yi+=step){
-      const dp=dpMx*(1-yi/ph);
-      let rr,gg,bb;
-      if(dp<dpm2){
-        const v=Math.min(1,(dpm2-dp)/Math.max(.01,dpm2));
-        rr=dk?Math.round(50+v*115):Math.round(244-v*28); gg=dk?Math.round(8+v*12):Math.round(200-v*155); bb=dk?Math.round(8+v*12):Math.round(200-v*155);
-      }else if(dp>pfl){
-        const v=Math.min(1,(dp-pfl)/3);
-        rr=dk?Math.round(4+v*16):Math.round(215-v*25); gg=dk?Math.round(34+v*50):Math.round(228-v*40); bb=dk?Math.round(62+v*70):Math.round(242-v*40);
-      }else{
-        const m2=Math.min(dp-dpm2,pfl-dp),mx=(pfl-dpm2)/2,q=mx>0?Math.min(1,m2/mx):0;
-        rr=dk?Math.round(4+q*16):Math.round(224-q*24); gg=dk?Math.round(44+q*112):Math.round(240-q*44); bb=dk?Math.round(34+q*70):Math.round(228-q*34);
+  const cv = document.getElementById('c2');
+  const W = cv.parentElement.clientWidth, H = 315;
+  
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  
+  const pL = 50, pR = 18, pT = 18, pB = 34;
+  const pw = Math.floor(W - pL - pR);
+  const ph = Math.floor(H - pT - pB);
+  
+  const jMn = 50, jMx = 1000;
+  const pfl = pflood(g.th, g.po);
+  
+  // Synchronized Dynamic Maximum matching Panel 0
+  const dpMx = Math.max(pfl * 1.15, g.dp * 1.2, 15);
+  
+  const dk = DK();
+  const off = document.createElement('canvas');
+  off.width = pw; off.height = ph;
+  const octx = off.getContext('2d');
+  const img = octx.createImageData(pw, ph);
+  const step = 2;
+  
+  for (let xi = 0; xi < pw; xi += step) {
+    const j = jMn + (xi / pw) * (jMx - jMn);
+    const dpm2 = dpMin(j, g.st, g.te);
+    
+    for (let yi = 0; yi < ph; yi += step) {
+      const dp = dpMx * (1 - yi / ph);
+      let rr, gg, bb;
+      
+      const isFlood = dp > pfl;
+      const isCrossover = dp < dpm2;
+      
+      if (isFlood && isCrossover) {
+        rr = dk ? 60 : 180; gg = dk ? 40 : 160; bb = dk ? 60 : 180;
+      } else if (isCrossover) {
+        const v = Math.min(1, (dpm2 - dp) / Math.max(0.1, dpm2));
+        rr = dk ? Math.round(50 + v*115) : Math.round(244 - v*28);
+        gg = dk ? Math.round(8 + v*12)   : Math.round(200 - v*155);
+        bb = dk ? Math.round(8 + v*12)   : Math.round(200 - v*155);
+     } else if (isFlood) {
+        // Flooding Risk -> BOLDER BLUE gradient
+        const v = Math.min(1, (dp - pfl) / 3);
+        rr = dk ? Math.round(4 + v*16)   : Math.round(150 - v*50);
+        gg = dk ? Math.round(34 + v*50)  : Math.round(180 - v*50);
+        bb = dk ? Math.round(62 + v*70)  : Math.round(240 - v*20);
+      } else {
+        const mx = (pfl - dpm2) / 2;
+        const dist = Math.min(dp - dpm2, pfl - dp);
+        const q = mx > 0 ? Math.min(1, dist / mx) : 0;
+        rr = dk ? Math.round(4 + q*16)   : Math.round(224 - q*80);
+        gg = dk ? Math.round(44 + q*112) : Math.round(240 - q*50);
+        bb = dk ? Math.round(34 + q*70)  : Math.round(228 - q*80);
       }
-      for(let si=0;si<step&&xi+si<pw;si++) for(let sj=0;sj<step&&yi+sj<ph;sj++){
-        const idx=((yi+sj)*Math.floor(pw)+(xi+si))*4;
-        img.data[idx]=rr; img.data[idx+1]=gg; img.data[idx+2]=bb; img.data[idx+3]=255;
+      
+      for (let si = 0; si < step && xi + si < pw; si++) {
+        for (let sj = 0; sj < step && yi + sj < ph; sj++) {
+          const idx = ((yi + sj) * pw + (xi + si)) * 4;
+          img.data[idx] = rr; img.data[idx+1] = gg; img.data[idx+2] = bb; img.data[idx+3] = 255;
+        }
       }
     }
   }
-  ctx.putImageData(img,pL,pT);
-  const xop=pL+(g.j-jMn)/(jMx-jMn)*pw, yop=pT+ph*(1-g.dp/dpMx);
-  ctx.strokeStyle='#a05c12';ctx.lineWidth=1;ctx.setLineDash([3,3]);
-  ctx.beginPath();ctx.moveTo(xop,pT);ctx.lineTo(xop,pT+ph);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(pL,yop);ctx.lineTo(pL+pw,yop);ctx.stroke();
+  
+  octx.putImageData(img, 0, 0);
+  ctx.drawImage(off, pL, pT, pw, ph);
+  
+  const xop = pL + (g.j - jMn) / (jMx - jMn) * pw;
+  const yop = pT + ph * (1 - g.dp / dpMx);
+  
+  ctx.strokeStyle = '#a05c12'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(xop, pT); ctx.lineTo(xop, pT + ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pL, yop); ctx.lineTo(pL + pw, yop); ctx.stroke();
   ctx.setLineDash([]);
-  ctx.beginPath();ctx.arc(xop,yop,5,0,Math.PI*2);ctx.fillStyle='#a05c12';ctx.fill();
-  ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
-  ctx.strokeStyle=dk?'#444':'#ccc';ctx.lineWidth=.5;ctx.strokeRect(pL,pT,pw,ph);
-  ctx.fillStyle=TC();ctx.font=`9px ${MN}`;
-  for(let j=100;j<=1000;j+=100){const x=pL+(j-jMn)/(jMx-jMn)*pw;ctx.textAlign='center';ctx.fillText(j,x,H-3);ctx.beginPath();ctx.moveTo(x,pT+ph);ctx.lineTo(x,pT+ph+3);ctx.strokeStyle=dk?'#444':'#ccc';ctx.stroke();}
-  for(let dp=0;dp<=12;dp+=2){const y=pT+ph*(1-dp/dpMx);ctx.textAlign='right';ctx.fillText(dp,pL-3,y+3);}
-  ctx.textAlign='center';ctx.fillText('j (mA cm⁻²)',pL+pw/2,H-1);
-  ctx.save();ctx.translate(10,pT+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText('Δp (bar)',0,0);ctx.restore();
+  ctx.beginPath(); ctx.arc(xop, yop, 5, 0, Math.PI*2); ctx.fillStyle = '#a05c12'; ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  
+  ctx.strokeStyle = dk ? '#444' : '#ccc'; ctx.lineWidth = 0.5; ctx.strokeRect(pL, pT, pw, ph);
+  ctx.fillStyle = TC(); ctx.font = `9px ${MN}`;
+  
+  for(let j=100; j<=1000; j+=100) {
+      const x = pL + (j - jMn) / (jMx - jMn) * pw;
+      ctx.textAlign = 'center'; ctx.fillText(j, x, H - 3);
+      ctx.beginPath(); ctx.moveTo(x, pT + ph); ctx.lineTo(x, pT + ph + 3);
+      ctx.strokeStyle = dk ? '#444' : '#ccc'; ctx.stroke();
+  }
+  
+  // Dynamic Y-axis ticks based on the new synchronized max
+  const yTickStep = dpMx > 30 ? 10 : dpMx > 15 ? 5 : 3;
+  for(let dp=0; dp<=dpMx; dp+=yTickStep) { 
+      const y = pT + ph * (1 - dp / dpMx);
+      ctx.textAlign = 'right'; ctx.fillText(dp, pL - 3, y + 3);
+  }
+  
+  ctx.textAlign = 'center'; ctx.fillText('j (mA cm⁻²)', pL + pw/2, H - 1);
+  ctx.save(); ctx.translate(10, pT + ph/2); ctx.rotate(-Math.PI/2); ctx.fillText('Δp (bar)', 0, 0); ctx.restore();
 }
 
 // ════ P3: Performance ═════════════════════════════════════════════
@@ -646,35 +712,39 @@ function dP3() {
   const c = CATS[g.cat];
   const js = []; for(let j=50;j<=1000;j+=20) js.push(j);
   const maps = {
-    FE:     {no:j=>feV(g.cat,j,0),      wd:j=>feV(g.cat,j,g.dp),         lbl:'Faradaic efficiency (%)',         mn:0,  mx:100},
+    FE:     {no:j=>feV(g.cat,j,0,g.te),      wd:j=>feV(g.cat,j,g.dp,g.te),         lbl:'Faradaic efficiency (%)',         mn:0,  mx:100},
     EE:     {no:j=>eeV(g.cat,j,0,g.te), wd:j=>eeV(g.cat,j,g.dp,g.te),   lbl:'Energy efficiency (%)',           mn:0,  mx:80},
     util:   {no:j=>utV(g.cat,j,0,g.fl,g.te), wd:j=>utV(g.cat,j,g.dp,g.fl,g.te), lbl:'CO₂ utilisation (%)',  mn:0,  mx:100},
     Vcell:  {no:j=>vcV(g.cat,j,0,g.te), wd:j=>vcV(g.cat,j,g.dp,g.te),   lbl:'Cell voltage (V)',                mn:1,  mx:8},
-    Xcarb:  {no:j=>xCarb(j,0),          wd:j=>xCarb(j,g.dp),              lbl:'Carbonate fraction X<sub>carb</sub>',       mn:0,  mx:1},
+    Xcarb:  {no:j=>xCarb(j,0,g.te),          wd:j=>xCarb(j,g.dp,g.te),              lbl:'Carbonate fraction X<sub>carb</sub>',       mn:0,  mx:1},
     eta_mt: {no:j=>etaMT(j,0,c.ne,g.te)*1000, wd:j=>etaMT(j,g.dp,c.ne,g.te)*1000, lbl:'Mass transport η_mt (mV)', mn:0, mx:50},
   }[out];
+  
+  const noData = js.map(j => ({ x: j, y: maps.no(j) }));
+  const wdData = js.map(j => ({ x: j, y: maps.wd(j) }));
+
   if(CH.c3)CH.c3.destroy();
   CH.c3 = new Chart(document.getElementById('c3'),{type:'line',
-    data:{labels:js,datasets:[
-      {label:'Without Δp',data:js.map(maps.no),borderColor:c.col+'55',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:.32,fill:false},
-      {label:`With Δp=${g.dp.toFixed(1)} bar`,data:js.map(maps.wd),borderColor:c.col,borderWidth:2,pointRadius:0,tension:.32,fill:false},
+    data:{ datasets:[
+      {label:'Without Δp',data:noData,borderColor:c.col+'55',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0,fill:false},
+      {label:`With Δp=${g.dp.toFixed(1)} bar`,data:wdData,borderColor:c.col,borderWidth:2,pointRadius:0,tension:0,fill:false},
       {label:'Op',type:'scatter',data:[{x:g.j,y:maps.wd(g.j)}],backgroundColor:c.col,pointRadius:9,showLine:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:cc=>cc.dataset.label==='Op'?`${out} at j=${g.j}: ${cc.parsed.y.toFixed(2)}`:cc.dataset.label+': '+cc.parsed.y.toFixed(2)}}},
       scales:{
-        x:{title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:10,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:9},maxTicksLimit:11}},
-        y:{title:{display:true,text:maps.lbl,color:TC(),font:{size:10,family:MN}},min:maps.mn,max:maps.mx,grid:{color:GC()},ticks:{color:TC(),font:{size:9}}}
+        x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:10,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:9},maxTicksLimit:11}},
+        y:{type:'linear',title:{display:true,text:maps.lbl,color:TC(),font:{size:10,family:MN}},min:maps.mn,max:maps.mx,grid:{color:GC()},ticks:{color:TC(),font:{size:9}}}
       }
     }
   });
-  const fv2=feV(g.cat,g.j,g.dp), ev2=eeV(g.cat,g.j,g.dp,g.te), uv2=utV(g.cat,g.j,g.dp,g.fl,g.te), vc2=vcV(g.cat,g.j,g.dp,g.te);
+  const fv2=feV(g.cat,g.j,g.dp,g.te), ev2=eeV(g.cat,g.j,g.dp,g.te), uv2=utV(g.cat,g.j,g.dp,g.fl,g.te), vc2=vcV(g.cat,g.j,g.dp,g.te);
   document.getElementById('p3lr').innerHTML=`
     <div class="le"><span class="sw" style="background:${c.col}"></span>With Δp=${g.dp.toFixed(1)} bar</div>
     <div class="le"><span class="sw" style="border-top:1.5px dashed ${c.col};background:transparent;height:0"></span>Without Δp</div>
     <div class="le"><span class="sw" style="background:${c.col};border-radius:50%"></span>j=${g.j} mA cm⁻²</div>`;
   document.getElementById('p3inf').innerHTML=`<strong>${c.name} — ${c.prod}</strong> at j=${g.j}, Δp=${g.dp.toFixed(1)} bar:<br>
-    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η<sub>util</sub>=${uv2.toFixed(1)}% &nbsp;·&nbsp; V_cell=${vc2.toFixed(2)} V &nbsp;·&nbsp; X<sub>carb</sub>=${xCarb(g.j,g.dp).toFixed(3)}<br>
+    FE=${fv2.toFixed(1)}% &nbsp;·&nbsp; EE=${ev2.toFixed(1)}% &nbsp;·&nbsp; η<sub>util</sub>=${uv2.toFixed(1)}% &nbsp;·&nbsp; V_cell=${vc2.toFixed(2)} V &nbsp;·&nbsp; X<sub>carb</sub>=${xCarb(g.j,g.dp,g.te).toFixed(3)}<br>
     ${c.note}<span class="src">Source: ${c.ref}</span>`;
 }
 
@@ -684,28 +754,28 @@ function dP4() {
   const ks = ['Cu','Ag','BiSn'];
   const ccs = document.getElementById('ccs'); ccs.innerHTML='';
   ks.forEach(k => {
-    const c=CATS[k], fv2=feV(k,g.j,g.dp), ev2=eeV(k,g.j,g.dp,g.te), uv2=utV(k,g.j,g.dp,g.fl,g.te);
+    const c=CATS[k], fv2=feV(k,g.j,g.dp,g.te), ev2=eeV(k,g.j,g.dp,g.te), uv2=utV(k,g.j,g.dp,g.fl,g.te);
     const d=document.createElement('div'); d.className='cc'; d.style.borderColor=c.col;
     d.innerHTML=`<div class="sym" style="color:${c.col}">${c.sym}</div><div class="cn">${c.name}</div><div class="cp">${c.prod}</div><div class="cs">FE <strong style="color:${c.col}">${fv2.toFixed(1)}%</strong> &nbsp;EE <strong>${ev2.toFixed(1)}%</strong> &nbsp;η <strong>${uv2.toFixed(1)}%</strong></div>`;
     ccs.appendChild(d);
   });
   const js=[]; for(let j=50;j<=1000;j+=20) js.push(j);
   if(CH.c4a)CH.c4a.destroy();
-  CH.c4a=new Chart(document.getElementById('c4a'),{type:'line',data:{labels:js,datasets:ks.flatMap(k=>[
-    {label:`${k} no Δp`,data:js.map(j=>feV(k,j,0)),borderColor:CATS[k].col+'55',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:.32},
-    {label:`${k} Δp=${g.dp.toFixed(1)}`,data:js.map(j=>feV(k,j,g.dp)),borderColor:CATS[k].col,borderWidth:2,pointRadius:0,tension:.32},
+  CH.c4a=new Chart(document.getElementById('c4a'),{type:'line',data:{datasets:ks.flatMap(k=>[
+    {label:`${k} no Δp`,data:js.map(j=>({x:j,y:feV(k,j,0,g.te)})),borderColor:CATS[k].col+'55',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0},
+    {label:`${k} Δp=${g.dp.toFixed(1)}`,data:js.map(j=>({x:j,y:feV(k,j,g.dp,g.te)})),borderColor:CATS[k].col,borderWidth:2,pointRadius:0,tension:0},
   ])},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:false},tooltip:{callbacks:{label:c2=>c2.dataset.label+': '+c2.parsed.y.toFixed(1)+'%'}}},
-    scales:{x:{title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:9,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:8},maxTicksLimit:10}},
-      y:{title:{display:true,text:'Faradaic efficiency (%)',color:TC(),font:{size:9,family:MN}},min:0,max:100,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}}}});
+    scales:{x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:9,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:8},maxTicksLimit:10}},
+      y:{type:'linear',title:{display:true,text:'Faradaic efficiency (%)',color:TC(),font:{size:9,family:MN}},min:0,max:100,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}}}});
   if(CH.c4b)CH.c4b.destroy();
-  CH.c4b=new Chart(document.getElementById('c4b'),{type:'line',data:{labels:js,datasets:ks.flatMap(k=>[
-    {label:`${k} no Δp`,data:js.map(j=>eeV(k,j,0,g.te)),borderColor:CATS[k].col+'55',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:.32},
-    {label:`${k} Δp=${g.dp.toFixed(1)}`,data:js.map(j=>eeV(k,j,g.dp,g.te)),borderColor:CATS[k].col,borderWidth:2,pointRadius:0,tension:.32},
+  CH.c4b=new Chart(document.getElementById('c4b'),{type:'line',data:{datasets:ks.flatMap(k=>[
+    {label:`${k} no Δp`,data:js.map(j=>({x:j,y:eeV(k,j,0,g.te)})),borderColor:CATS[k].col+'55',borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0},
+    {label:`${k} Δp=${g.dp.toFixed(1)}`,data:js.map(j=>({x:j,y:eeV(k,j,g.dp,g.te)})),borderColor:CATS[k].col,borderWidth:2,pointRadius:0,tension:0},
   ])},options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:false},tooltip:{callbacks:{label:c2=>c2.dataset.label+': '+c2.parsed.y.toFixed(1)+'%'}}},
-    scales:{x:{title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:9,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:8},maxTicksLimit:10}},
-      y:{title:{display:true,text:'Energy efficiency (%)',color:TC(),font:{size:9,family:MN}},min:0,max:75,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}}}});
+    scales:{x:{type:'linear',min:50,max:1000,title:{display:true,text:'j (mA cm⁻²)',color:TC(),font:{size:9,family:MN}},grid:{color:GC()},ticks:{color:TC(),font:{size:8},maxTicksLimit:10}},
+      y:{type:'linear',title:{display:true,text:'Energy efficiency (%)',color:TC(),font:{size:9,family:MN}},min:0,max:75,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}}}});
   document.getElementById('p4inf').innerHTML=`At j=${g.j} mA cm⁻², Δp=${g.dp.toFixed(1)} bar. Dashed = no Δp; solid = with Δp.<span class="src">Cu: Dinh et al. Science 2018 | Ag: Gabardo et al. EES 2019 | Bi/Sn: Zheng et al. Nat.Catal. 2019 | α: Cu=0.65, Ag=0.40, Bi/Sn=0.35</span>`;
 }
 
@@ -721,7 +791,7 @@ function dP5() {
   const g=G();
   const pg=document.getElementById('pgrd'); pg.innerHTML='';
   PSET.forEach(p=>{
-    const pfl2=pflood(p.th,p.po), dpm2=dpMin(g.j,g.st), dpw=Math.max(0,pfl2-dpm2);
+    const pfl2=pflood(p.th,p.po), dpm2=dpMin(g.j,g.st,g.te), dpw=Math.max(0,pfl2-dpm2);
     const d=document.createElement('div'); d.className='pc'+(p.id===selP?' sel':'');
     if(p.id===selP)d.style.borderColor=p.col;
     d.onclick=()=>{selP=p.id;dP5();};
@@ -731,24 +801,24 @@ function dP5() {
     pg.appendChild(d);
   });
   const sp=PSET.find(p=>p.id===selP);
-  const pfl2=pflood(sp.th,sp.po), dpm2=dpMin(g.j,g.st);
+  const pfl2=pflood(sp.th,sp.po), dpm2=dpMin(g.j,g.st,g.te);
   document.getElementById('pins').innerHTML=`<strong>${sp.id}: ${sp.title}</strong> — j=${g.j} mA cm⁻², suppression target=${(g.st*100).toFixed(0)}%<br>
     Δp<sub>min</sub>=${dpm2.toFixed(2)} bar · P<sub>flood</sub>=${pfl2.toFixed(2)} bar · DPW=${Math.max(0,pfl2-dpm2).toFixed(2)} bar · Cost ${sp.cost.toFixed(1)}×<br><br>${sp.note}`;
   if(CH.c5)CH.c5.destroy();
   CH.c5=new Chart(document.getElementById('c5'),{type:'scatter',
-    data:{datasets:PSET.map(p=>{const pf=pflood(p.th,p.po),dm=dpMin(g.j,g.st),dw=Math.max(0,pf-dm);
+    data:{datasets:PSET.map(p=>{const pf=pflood(p.th,p.po),dm=dpMin(g.j,g.st,g.te),dw=Math.max(0,pf-dm);
       return{label:p.id,data:[{x:p.cost,y:dw}],backgroundColor:p.id===selP?p.col:p.col+'80',borderColor:p.col,pointRadius:p.id===selP?12:8,borderWidth:p.id===selP?2:1};})},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const p=PSET.find(pp=>pp.id===c.dataset.label);return`${p.title}: DPW=${c.parsed.y.toFixed(1)} bar @ j=${g.j}`;} } } },
       scales:{
-        x:{title:{display:true,text:'Relative cost (×)',color:TC(),font:{size:9,family:MN}},min:0,max:7,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}},
-        y:{title:{display:true,text:`DPW at j=${g.j} mA cm⁻² (bar)`,color:TC(),font:{size:9,family:MN}},min:0,max:20,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}
+        x:{type:'linear', title:{display:true,text:'Relative cost (×)',color:TC(),font:{size:9,family:MN}},min:0,max:7,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}},
+        y:{type:'linear', title:{display:true,text:`DPW at j=${g.j} mA cm⁻² (bar)`,color:TC(),font:{size:9,family:MN}},min:0,max:20,grid:{color:GC()},ticks:{color:TC(),font:{size:8}}}
       },
       onClick(e,els){if(els.length){selP=PSET[els[0].datasetIndex].id;dP5();}}}
   });
   setTimeout(()=>{
     const ch=CH.c5; if(!ch)return;
-    const pts=PSET.map(p=>{const pf=pflood(p.th,p.po),dm=dpMin(g.j,g.st);return{x:p.cost,y:Math.max(0,pf-dm),id:p.id};}).sort((a,b)=>a.x-b.x);
+    const pts=PSET.map(p=>{const pf=pflood(p.th,p.po),dm=dpMin(g.j,g.st,g.te);return{x:p.cost,y:Math.max(0,pf-dm),id:p.id};}).sort((a,b)=>a.x-b.x);
     const c2=ch.ctx,xs=ch.scales.x,ys=ch.scales.y;
     c2.save();c2.setLineDash([4,4]);c2.strokeStyle=DK()?'#555':'#bbb';c2.lineWidth=1;
     c2.beginPath();pts.forEach((pt,i)=>{const px=xs.getPixelForValue(pt.x),py=ys.getPixelForValue(pt.y);i===0?c2.moveTo(px,py):c2.lineTo(px,py);});c2.stroke();
@@ -766,8 +836,17 @@ window.addEventListener('resize',()=>setTimeout(()=>[dP0,dP1,dP2,dP3,dP4,dP5][AT
 function exportPNG(canvasId, fname) {
   const cv = document.getElementById(canvasId);
   if (!cv) { alert('No chart to export — switch to this panel first.'); return; }
-  // For Chart.js canvas, use toDataURL directly
-  const url = cv.toDataURL('image/png', 1.0);
+  
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = cv.width;
+  tempCanvas.height = cv.height;
+  const tCtx = tempCanvas.getContext('2d');
+  
+  tCtx.fillStyle = DK() ? '#131210' : '#ffffff';
+  tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+  tCtx.drawImage(cv, 0, 0);
+
+  const url = tempCanvas.toDataURL('image/png', 1.0);
   const a = document.createElement('a');
   a.href = url;
   a.download = `DPW_${fname}_j${G().j}_dp${G().dp.toFixed(1)}.png`;
@@ -786,7 +865,7 @@ function exportCSV(canvasId) {
     headers = ['j_mA_cm2','dpMin_bar','P_flood_bar','DPW_width_bar'];
     const pf = pflood(g.th, g.po);
     rows = j_arr.map(j => {
-      const dm = dpMin(j, g.st);
+      const dm = dpMin(j, g.st, g.te);
       return [j, dm.toFixed(3), pf.toFixed(3), Math.max(0,pf-dm).toFixed(3)];
     });
   } else if (canvasId === 'c3' || canvasId === 'c4a' || canvasId === 'c4b') {
@@ -798,27 +877,26 @@ function exportCSV(canvasId) {
                `Vcell_${cat}_noDP_V`, `Vcell_${cat}_withDP_V`];
     rows = j_arr.map(j => [
       j,
-      feV(cat,j,0).toFixed(2),     feV(cat,j,g.dp).toFixed(2),
+      feV(cat,j,0,g.te).toFixed(2),     feV(cat,j,g.dp,g.te).toFixed(2),
       eeV(cat,j,0,g.te).toFixed(2),eeV(cat,j,g.dp,g.te).toFixed(2),
-      xCarb(j,0).toFixed(4),       xCarb(j,g.dp).toFixed(4),
+      xCarb(j,0,g.te).toFixed(4),       xCarb(j,g.dp,g.te).toFixed(4),
       vcV(cat,j,0,g.te).toFixed(3),vcV(cat,j,g.dp,g.te).toFixed(3),
     ]);
   } else if (canvasId === 'c5') {
     headers = ['architecture','pore_nm','theta_deg','cost_relative',
                'P_flood_bar','dpMin_bar','DPW_width_bar'];
     rows = PSET.map(p => {
-      const pf=pflood(p.th,p.po), dm=dpMin(g.j,g.st), dw=Math.max(0,pf-dm);
+      const pf=pflood(p.th,p.po), dm=dpMin(g.j,g.st,g.te), dw=Math.max(0,pf-dm);
       return [p.id+'_'+p.title.replace(/[^A-Za-z0-9]/g,'_'),
               p.po, p.th, p.cost.toFixed(1),
               pf.toFixed(3), dm.toFixed(3), dw.toFixed(3)];
     });
   } else {
-    // Generic: export all outputs for selected catalyst
     const cat = document.getElementById('Gcat').value;
     headers = ['j_mA_cm2','xCarb','FE_pct','EE_pct','Vcell_V','util_pct','eta_mt_mV'];
     rows = j_arr.map(j => [
-      j, xCarb(j,g.dp).toFixed(4),
-      feV(cat,j,g.dp).toFixed(2),
+      j, xCarb(j,g.dp,g.te).toFixed(4),
+      feV(cat,j,g.dp,g.te).toFixed(2),
       eeV(cat,j,g.dp,g.te).toFixed(2),
       vcV(cat,j,g.dp,g.te).toFixed(3),
       utV(cat,j,g.dp,g.fl,g.te).toFixed(2),
@@ -828,7 +906,7 @@ function exportCSV(canvasId) {
 
   const csvContent = [
     `# DPW Model Export — j=${g.j} mA/cm² | Δp=${g.dp.toFixed(1)} bar | T=${g.te}°C`,
-    `# θ=${g.th}° | d_pore=${g.po}nm | f<sub>targ</sub>=${(g.st*100).toFixed(0)}%`,
+    `# θ=${g.th}° | d_pore=${g.po}nm | f_targ=${(g.st*100).toFixed(0)}%`,
     `# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}`,
     `# Source: Bellamkonda & Seemakurthy, Hydronium Energies Ltd. (2026)`,
     headers.join(','),
@@ -843,7 +921,6 @@ function exportCSV(canvasId) {
   URL.revokeObjectURL(a.href);
 }
 
-// ── Show/hide η<sub>util</sub> disclaimer ───────────────────────────────────
 function toggleUtilDisclaimer() {
   const sel = document.getElementById('P3o');
   const disc = document.getElementById('util-disclaimer');
