@@ -543,7 +543,7 @@ function dP0() {
   });
 }
 
-// ════ P1: 3D surface ══════════════════════════════════════════════
+// ════ P1: 3D surface (Typography Updated) ═════════════════════════
 function dP1() {
   const rot = +document.getElementById('P1r').value;
   document.getElementById('P1rv').textContent = rot + '°';
@@ -593,12 +593,15 @@ function dP1() {
   ctx.beginPath();ctx.moveTo(ox,oy2);ctx.lineTo(ax,ay);ctx.stroke();
   ctx.beginPath();ctx.moveTo(ox,oy2);ctx.lineTo(bx,by);ctx.stroke();
   ctx.beginPath();ctx.moveTo(ox,oy2);ctx.lineTo(vx,vy);ctx.stroke();
-  ctx.fillStyle=TC();ctx.font=`9px ${MN}`;ctx.textAlign='center';
-  ctx.fillText('j (50→1000 mA cm⁻²)',(ox+ax)/2,(oy2+ay)/2+14);
-  ctx.fillText('Δp',(ox+bx)/2-8,(oy2+by)/2+7);
-  ctx.fillText('DPW margin',vx,vy-7);
+  
+  // INCREASED FONT SIZES & ADJUSTED MARGINS FOR 3D LABELS
+  ctx.fillStyle=TC(); 
+  ctx.font=`15px ${MN}`; 
+  ctx.textAlign='center';
+  ctx.fillText('j (50→1000 mA cm⁻²)',(ox+ax)/2,(oy2+ay)/2+20); // Nudged down
+  ctx.fillText('Δp',(ox+bx)/2-16,(oy2+by)/2+10); // Nudged left
+  ctx.fillText('DPW margin',vx,vy-12); // Nudged up
 }
-
 // ════ P2: Risk heatmap (v3.7 Perfect Axis Matching) ════════════════
 function dP2() {
   const g = G();
