@@ -599,7 +599,7 @@ function dP1() {
   ctx.fillText('DPW margin',vx,vy-7);
 }
 
-// ════ P2: Risk heatmap (Synchronized Axes) ════════════════════════
+// ════ P2: Risk heatmap (v3.7 Perfect Axis Matching) ════════════════
 function dP2() {
   const g = G();
   const cv = document.getElementById('c2');
@@ -612,7 +612,8 @@ function dP2() {
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, W, H);
   
-  const pL = 50, pR = 18, pT = 18, pB = 34;
+  // INCREASED PADDING to accommodate larger 15px fonts
+  const pL = 65, pR = 20, pT = 20, pB = 50; 
   const pw = Math.floor(W - pL - pR);
   const ph = Math.floor(H - pT - pB);
   
@@ -647,12 +648,11 @@ function dP2() {
         rr = dk ? Math.round(50 + v*115) : Math.round(244 - v*28);
         gg = dk ? Math.round(8 + v*12)   : Math.round(200 - v*155);
         bb = dk ? Math.round(8 + v*12)   : Math.round(200 - v*155);
-     } else if (isFlood) {
-        // Flooding Risk -> BOLDER BLUE gradient
+      } else if (isFlood) {
         const v = Math.min(1, (dp - pfl) / 3);
-        rr = dk ? Math.round(4 + v*16)   : Math.round(150 - v*50);
-        gg = dk ? Math.round(34 + v*50)  : Math.round(180 - v*50);
-        bb = dk ? Math.round(62 + v*70)  : Math.round(240 - v*20);
+        rr = dk ? Math.round(4 + v*16)   : Math.round(215 - v*25);
+        gg = dk ? Math.round(34 + v*50)  : Math.round(228 - v*40);
+        bb = dk ? Math.round(62 + v*70)  : Math.round(242 - v*40);
       } else {
         const mx = (pfl - dpm2) / 2;
         const dist = Math.min(dp - dpm2, pfl - dp);
@@ -685,24 +685,45 @@ function dP2() {
   ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
   
   ctx.strokeStyle = dk ? '#444' : '#ccc'; ctx.lineWidth = 0.5; ctx.strokeRect(pL, pT, pw, ph);
-  ctx.fillStyle = TC(); ctx.font = `15px ${MN}`;
   
+  // ----- DRAW TICKS (12px Font - Matches P0) -----
+  ctx.fillStyle = TC(); 
+  ctx.font = `12px ${MN}`; 
+  
+  // X-Axis Ticks
   for(let j=100; j<=1000; j+=100) {
       const x = pL + (j - jMn) / (jMx - jMn) * pw;
-      ctx.textAlign = 'center'; ctx.fillText(j, x, H - 3);
-      ctx.beginPath(); ctx.moveTo(x, pT + ph); ctx.lineTo(x, pT + ph + 3);
-      ctx.strokeStyle = dk ? '#444' : '#ccc'; ctx.stroke();
+      ctx.textAlign = 'center'; 
+      ctx.fillText(j, x, pT + ph + 18); // Pushed down to clear larger font
+      
+      ctx.beginPath(); 
+      ctx.moveTo(x, pT + ph); 
+      ctx.lineTo(x, pT + ph + 5); 
+      ctx.strokeStyle = dk ? '#444' : '#ccc'; 
+      ctx.stroke();
   }
   
-  // Dynamic Y-axis ticks based on the new synchronized max
+  // Y-Axis Ticks
   const yTickStep = dpMx > 30 ? 10 : dpMx > 15 ? 5 : 3;
   for(let dp=0; dp<=dpMx; dp+=yTickStep) { 
       const y = pT + ph * (1 - dp / dpMx);
-      ctx.textAlign = 'right'; ctx.fillText(dp, pL - 3, y + 3);
+      ctx.textAlign = 'right'; 
+      ctx.fillText(dp, pL - 8, y + 4); // Extra clearance from axis
   }
   
-  ctx.textAlign = 'center'; ctx.fillText('j (mA cm⁻²)', pL + pw/2, H - 1);
-  ctx.save(); ctx.translate(10, pT + ph/2); ctx.rotate(-Math.PI/2); ctx.fillText('Δp (bar)', 0, 0); ctx.restore();
+  // ----- DRAW MAIN AXIS LABELS (15px Font - Matches P0) -----
+  ctx.font = `15px ${MN}`; 
+  
+  // Main X-Axis Label
+  ctx.textAlign = 'center'; 
+  ctx.fillText('j (mA cm⁻²)', pL + pw/2, H - 6); 
+  
+  // Main Y-Axis Label
+  ctx.save(); 
+  ctx.translate(20, pT + ph/2); // Pushed further left so it doesn't hit the larger tick numbers
+  ctx.rotate(-Math.PI/2); 
+  ctx.fillText('Δp (bar)', 0, 0); 
+  ctx.restore();
 }
 
 // ════ P3: Performance ═════════════════════════════════════════════
