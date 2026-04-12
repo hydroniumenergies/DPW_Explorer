@@ -503,9 +503,9 @@ function ua() {
     <div class="mc"><div class="ml">X<sub>carb</sub></div><div class="mv">${xc.toFixed(3)}</div></div>
     <div class="mc"><div class="ml">FE (${g.cat})</div><div class="mv">${fv.toFixed(1)}<span class="mu">%</span></div></div>
     <div class="mc"><div class="ml">Energy eff.</div><div class="mv">${ev.toFixed(1)}<span class="mu">%</span></div></div>
-    <div class="mc"><div class="ml">V_cell (${g.cat})</div><div class="mv">${vc.toFixed(2)}<span class="mu">V</span></div></div>
+    <div class="mc"><div class="ml">V<sub>cell</sub> (${g.cat})</div><div class="mv">${vc.toFixed(2)}<span class="mu">V</span></div></div>
     <div class="mc"><div class="ml">η<sub>util</sub></div><div class="mv">${uv.toFixed(1)}<span class="mu">%</span></div></div>
-    <div class="mc"><div class="ml">η_mt (mV)</div><div class="mv">${(etaMT(g.j,g.dp,CATS[g.cat].ne,g.te)*1000).toFixed(1)}</div></div>`;
+    <div class="mc"><div class="ml">η<sub>mt</sub> (mV)</div><div class="mv">${(etaMT(g.j,g.dp,CATS[g.cat].ne,g.te)*1000).toFixed(1)}</div></div>`;
 
   [dP0,dP1,dP2,dP3,dP4,dP5][AT]();
 }
